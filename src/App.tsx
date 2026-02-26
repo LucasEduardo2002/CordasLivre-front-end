@@ -229,17 +229,14 @@ export default function App() {
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50/70 p-5 shadow-md">
-          <div className="mb-4 flex items-center justify-between gap-3">
+        <section className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50/70 p-4 shadow-md md:p-5">
+          <div className="mb-4 flex items-start justify-between gap-3 md:items-center">
             <div>
               <p className="text-xs font-extrabold uppercase tracking-wide text-indigo-700">Passo 1</p>
               <h3 className="text-lg font-extrabold text-slate-900 md:text-xl">Selecione seu instrumento</h3>
             </div>
-            <span className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
-              Filtro principal
-            </span>
           </div>
-          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+          <div className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto px-1 pb-2">
             {stringTypeOptions.map((option) => {
               const active = option.value === selectedType;
               return (
@@ -247,7 +244,7 @@ export default function App() {
                   key={option.value}
                   type="button"
                   onClick={() => setSelectedType(option.value)}
-                  className={`whitespace-nowrap rounded-full border px-4 py-2.5 text-sm font-bold transition ${
+                  className={`snap-start whitespace-nowrap rounded-full border px-4 py-3 text-sm font-bold transition md:py-2.5 ${
                     active
                       ? 'border-indigo-700 bg-indigo-700 text-white shadow-sm'
                       : 'border-indigo-200 bg-white text-indigo-800 hover:border-indigo-300 hover:bg-indigo-100'
@@ -258,7 +255,7 @@ export default function App() {
               );
             })}
           </div>
-          <p className="mt-3 text-xs font-medium text-indigo-800">
+          <p className="mt-2 text-xs font-medium text-indigo-800">
             O ranking abaixo é atualizado conforme o instrumento selecionado.
           </p>
         </section>
