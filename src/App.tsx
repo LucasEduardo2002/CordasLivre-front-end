@@ -172,8 +172,6 @@ export default function App() {
   }, [selectedType]);
 
   const topProduct = products.find((product) => product.rank === 1) || products[0];
-  const lowestPrice = products.length ? Math.min(...products.map((product) => product.price)) : 0;
-  const highestPrice = products.length ? Math.max(...products.map((product) => product.price)) : 0;
   const selectedTypeLabel = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violão';
   const hasTopProduct = Boolean(topProduct?.permalink);
 
@@ -184,7 +182,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-900 text-lg text-white">🎸</div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Top 10 por instrumento</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Top 10 + avaliação por IA</p>
               <h1 className="text-lg font-bold md:text-xl">CordasLivre</h1>
             </div>
           </div>
@@ -202,19 +200,13 @@ export default function App() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-        <section className="grid gap-6 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 text-white shadow-xl md:grid-cols-[1.2fr_0.8fr] md:p-10">
+        <section className="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 text-white shadow-xl md:p-10">
           <div>
-            <p className="mb-3 inline-flex items-center rounded-full border border-white/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              Seleção em destaque por instrumento
-            </p>
             <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
-              Compare cordas em destaque com avaliações reais.
+              Encontre a melhor corda para seu instrumento.
             </h2>
             <p className="mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
-              Selecione seu instrumento e veja um Top 10 baseado em relevância da busca e avaliações disponíveis.
-            </p>
-            <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-200">
-              Estoques e preços podem mudar rapidamente.
+              Veja o Top 10, compare preços e use o botão <strong>Gerar avaliação IA</strong> para analisar cada produto.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
@@ -235,25 +227,6 @@ export default function App() {
               </a>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 gap-3 self-end sm:grid-cols-2">
-            <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20">
-              <p className="text-xs uppercase tracking-wide text-slate-200">Marketplace</p>
-              <p className="mt-2 text-lg font-bold">Mercado Livre</p>
-            </div>
-            <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20">
-              <p className="text-xs uppercase tracking-wide text-slate-200">Faixa de preço</p>
-              <p className="mt-2 text-sm font-bold md:text-base">
-                {products.length ? `${formatPrice(lowestPrice)} a ${formatPrice(highestPrice)}` : 'Carregando...'}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-xs text-slate-600 md:grid-cols-3 md:text-sm">
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Top 10 segmentado por instrumento para facilitar sua comparação.</p>
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">A ordem considera relevância da busca e dados de avaliação disponíveis.</p>
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Clique e confira os detalhes direto no anúncio do marketplace.</p>
         </section>
 
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -291,7 +264,7 @@ export default function App() {
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Top 10 por instrumento</p>
               <h3 className="text-2xl font-extrabold md:text-3xl">Top 10 de cordas para {selectedTypeLabel.toLowerCase()}</h3>
             </div>
-            <p className="text-sm font-semibold text-slate-700">Compare e escolha com mais clareza</p>
+            <p className="text-sm font-semibold text-slate-700">Compare e gere avaliação IA em cada item</p>
           </div>
 
           {loading ? (
@@ -349,6 +322,7 @@ export default function App() {
                     <p className="mt-2 text-xs font-medium text-slate-600">
                       ⭐ {formatRating(product.ratingAvg)} · {formatRatingCount(product.ratingCount)}
                     </p>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-indigo-700">🧠 Avaliação IA disponível</p>
                     {hasExcellentRating(product.ratingAvg) && (
                       <span className="mt-2 inline-flex w-fit items-center rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-800">
                         Nota excelente
@@ -367,7 +341,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => handleGenerateAiReview(product)}
-                        className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
+                        className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500"
                       >
                         Gerar avaliação IA
                       </button>
