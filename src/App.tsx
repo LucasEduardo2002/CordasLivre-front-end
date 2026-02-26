@@ -25,6 +25,31 @@ const stringTypeOptions: Array<{ value: StringType; label: string }> = [
   { value: 'VIOLINO', label: 'Violino' },
 ];
 
+const DEFAULT_API_URL = 'https://cordaslivre-back-end.onrender.com';
+
+const resolveApiBaseUrl = () => {
+  const envUrl = (import.meta.env.VITE_API_URL || '').trim();
+
+  if (!envUrl) {
+    return DEFAULT_API_URL;
+  }
+
+  const normalized = envUrl.replace(/\/$/, '');
+
+  if (typeof window !== 'undefined') {
+    const isLocalHost = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+    const envPointsToLocal = /localhost|127\.0\.0\.1/i.test(normalized);
+
+    if (!isLocalHost && envPointsToLocal) {
+      return DEFAULT_API_URL;
+    }
+  }
+
+  return normalized;
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
+
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,13 +73,13 @@ export default function App() {
 
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const fetchProductsWithRetry = async (type: StringType, retries = 3, delayMs = 1200): Promise<Product[]> => {
+  const fetchProductsWithRetry = async (type: StringType, retries = 5, delayMs = 2000): Promise<Product[]> => {
     let lastError: unknown;
 
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        const response = await axios.get<Product[]>('http://localhost:3000/strings', {
-          timeout: 8000,
+        const response = await axios.get<Product[]>(`${API_BASE_URL}/strings`, {
+          timeout: 25000,
           params: { type },
         });
         return response.data;
@@ -201,7 +226,7 @@ export default function App() {
 
         {hasError && (
           <section className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-            Não foi possível carregar os produtos agora. Verifique se o back-end está ativo em localhost:3000.
+              Não foi possível carregar os produtos agora. Verifique se o back-end está ativo e acessível em {API_BASE_URL}.
           </section>
         )}
 
