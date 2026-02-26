@@ -16,6 +16,28 @@ interface Product {
   permalink: string;
 }
 
+interface AiReviewData {
+  title: string;
+  summary: string;
+  pros: string[];
+  attentionPoints: string[];
+  verdict: string;
+  confidence: 'baixa' | 'media' | 'alta';
+  generatedAt: string;
+}
+
+interface AiReviewResponse {
+  product: {
+    title: string;
+    price: number;
+    ratingAvg: number | null;
+    ratingCount: number;
+    type: StringType;
+    permalink?: string;
+  };
+  review: AiReviewData;
+}
+
 const stringTypeOptions: Array<{ value: StringType; label: string }> = [
   { value: 'VIOLAO', label: 'Violão' },
   { value: 'GUITARRA', label: 'Guitarra' },
@@ -55,6 +77,11 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [selectedType, setSelectedType] = useState<StringType>('VIOLAO');
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiReviewLoading, setAiReviewLoading] = useState(false);
+  const [aiReviewError, setAiReviewError] = useState<string | null>(null);
+  const [aiReviewData, setAiReviewData] = useState<AiReviewData | null>(null);
+  const [aiReviewProduct, setAiReviewProduct] = useState<Product | null>(null);
 
   const formatPrice = (value: number) =>
     value.toLocaleString('pt-BR', {
@@ -70,6 +97,12 @@ export default function App() {
 
   const formatRatingCount = (count: number) =>
     `${count.toLocaleString('pt-BR')} ${count === 1 ? 'avaliação' : 'avaliações'}`;
+
+  const formatAiConfidence = (confidence: AiReviewData['confidence']) => {
+    if (confidence === 'alta') return 'Alta';
+    if (confidence === 'baixa') return 'Baixa';
+    return 'Média';
+  };
 
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -92,6 +125,36 @@ export default function App() {
     }
 
     throw lastError;
+  };
+
+  const handleGenerateAiReview = async (product: Product) => {
+    setAiModalOpen(true);
+    setAiReviewLoading(true);
+    setAiReviewError(null);
+    setAiReviewData(null);
+    setAiReviewProduct(product);
+
+    try {
+      const response = await axios.post<AiReviewResponse>(
+        `${API_BASE_URL}/strings/ai-review`,
+        {
+          title: product.title,
+          price: product.price,
+          ratingAvg: product.ratingAvg,
+          ratingCount: product.ratingCount,
+          type: product.type,
+          permalink: product.permalink,
+        },
+        { timeout: 25000 },
+      );
+
+      setAiReviewData(response.data.review);
+    } catch (error) {
+      console.error('Erro ao gerar avaliação IA:', error);
+      setAiReviewError('Não foi possível gerar a avaliação IA agora. Tente novamente em instantes.');
+    } finally {
+      setAiReviewLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -292,14 +355,23 @@ export default function App() {
                       </span>
                     )}
                     <p className="mt-3 text-2xl font-extrabold text-slate-900">{formatPrice(product.price)}</p>
-                    <a
-                      href={product.permalink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-amber-400"
-                    >
-                      Comprar agora
-                    </a>
+                    <div className="mt-4 grid grid-cols-1 gap-2">
+                      <a
+                        href={product.permalink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-amber-400"
+                      >
+                        Comprar agora
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateAiReview(product)}
+                        className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-100"
+                      >
+                        Gerar avaliação IA
+                      </button>
+                    </div>
                   </div>
                 </article>
               ))}
@@ -316,6 +388,71 @@ export default function App() {
           </div>
         </section>
       </main>
+
+      {aiModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl md:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Avaliação por IA</p>
+                <h4 className="mt-1 text-lg font-extrabold text-slate-900 md:text-xl">
+                  {aiReviewProduct?.title ?? 'Produto selecionado'}
+                </h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAiModalOpen(false)}
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              >
+                Fechar
+              </button>
+            </div>
+
+            {aiReviewLoading ? (
+              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                Gerando avaliação inteligente deste produto...
+              </div>
+            ) : aiReviewError ? (
+              <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{aiReviewError}</div>
+            ) : aiReviewData ? (
+              <div className="mt-5 space-y-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Resumo</p>
+                  <p className="mt-2 text-sm text-slate-800">{aiReviewData.summary}</p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">Pontos fortes</p>
+                    <ul className="mt-2 space-y-1 text-sm text-emerald-900">
+                      {aiReviewData.pros.map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">Pontos de atenção</p>
+                    <ul className="mt-2 space-y-1 text-sm text-amber-900">
+                      {aiReviewData.attentionPoints.map((item, index) => (
+                        <li key={index}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Veredito</p>
+                  <p className="mt-2 text-sm font-medium text-slate-900">{aiReviewData.verdict}</p>
+                  <p className="mt-3 text-xs text-slate-500">
+                    Confiança da análise: <strong>{formatAiConfidence(aiReviewData.confidence)}</strong>
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
 
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between md:px-6">
