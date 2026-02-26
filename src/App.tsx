@@ -142,13 +142,13 @@ export default function App() {
         <section className="grid gap-6 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 text-white shadow-xl md:grid-cols-[1.2fr_0.8fr] md:p-10">
           <div>
             <p className="mb-3 inline-flex items-center rounded-full border border-white/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              Ofertas quentes atualizadas automaticamente
+              Seleção em destaque por instrumento
             </p>
             <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
-              Compre as cordas mais vendidas e bem avaliadas.
+              Compare cordas em destaque com avaliações reais.
             </h2>
             <p className="mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
-              Selecione seu instrumento e vá direto para o Top 10 com maior potencial de compra agora.
+              Selecione seu instrumento e veja um Top 10 baseado em relevância da busca e avaliações disponíveis.
             </p>
             <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-amber-200">
               Estoques e preços podem mudar rapidamente.
@@ -173,15 +173,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 self-end">
-            <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20">
-              <p className="text-xs uppercase tracking-wide text-slate-200">Produtos no ranking</p>
-              <p className="mt-2 text-3xl font-extrabold">10</p>
-            </div>
-            <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20">
-              <p className="text-xs uppercase tracking-wide text-slate-200">Atualização</p>
-              <p className="mt-2 text-xl font-bold md:text-2xl">Automática</p>
-            </div>
+          <div className="grid grid-cols-1 gap-3 self-end sm:grid-cols-2">
             <div className="rounded-xl bg-white/10 p-4 ring-1 ring-white/20">
               <p className="text-xs uppercase tracking-wide text-slate-200">Marketplace</p>
               <p className="mt-2 text-lg font-bold">Mercado Livre</p>
@@ -196,9 +188,9 @@ export default function App() {
         </section>
 
         <section className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-xs text-slate-600 md:grid-cols-3 md:text-sm">
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Top 10 segmentado para você comprar rápido, sem perder tempo pesquisando.</p>
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Produtos ranqueados por nota e volume real de avaliações.</p>
-          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Clique e vá direto para a oferta com maior chance de acerto.</p>
+          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Top 10 segmentado por instrumento para facilitar sua comparação.</p>
+          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">A ordem considera relevância da busca e dados de avaliação disponíveis.</p>
+          <p className="rounded-lg bg-slate-50 px-3 py-2 font-medium">Clique e confira os detalhes direto no anúncio do marketplace.</p>
         </section>
 
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -233,10 +225,10 @@ export default function App() {
         <section id="ranking" className="mt-8">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Ranking de conversão</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Top 10 por instrumento</p>
               <h3 className="text-2xl font-extrabold md:text-3xl">Top 10 de cordas para {selectedTypeLabel.toLowerCase()}</h3>
             </div>
-            <p className="text-sm font-semibold text-slate-700">Pronto para comprar em 1 clique</p>
+            <p className="text-sm font-semibold text-slate-700">Compare e escolha com mais clareza</p>
           </div>
 
           {loading ? (
@@ -286,7 +278,7 @@ export default function App() {
 
                   <div className="flex flex-1 flex-col p-4">
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      {product.rank <= 3 ? 'Alta conversão' : 'Produto em destaque'}
+                      {product.rank <= 3 ? 'Top destaque' : 'Produto em destaque'}
                     </p>
                     <h4 className="mt-2 min-h-12 text-sm font-semibold leading-5 text-slate-800">
                       {product.title}
