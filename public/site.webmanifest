@@ -1,0 +1,11 @@
+{
+  "name": "CordasLivre",
+  "short_name": "CordasLivre",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "lang": "pt-BR",
+  "description": "Compare cordas por instrumento e gere avaliação por IA antes de comprar."
+}
