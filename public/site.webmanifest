@@ -10,14 +10,9 @@
   "description": "Compare cordas por instrumento e gere avaliação por IA antes de comprar.",
   "icons": [
     {
-      "src": "/branding/logo-mark-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/branding/logo-mark-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/branding/logo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ]
 }
