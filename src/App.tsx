@@ -71,6 +71,8 @@ const resolveApiBaseUrl = () => {
 };
 
 const API_BASE_URL = resolveApiBaseUrl();
+const BRAND_LOGO_FULL = '/branding/logo-full.png';
+const BRAND_LOGO_MARK = '/branding/logo-mark.png';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -180,7 +182,13 @@ export default function App() {
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-900 text-lg text-white">🎸</div>
+            <img
+              src={BRAND_LOGO_MARK}
+              alt="Símbolo CordasLivre"
+              className="h-10 w-10 rounded-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Top 10 + avaliação por IA</p>
               <h1 className="text-lg font-bold md:text-xl">CordasLivre</h1>
@@ -202,6 +210,13 @@ export default function App() {
       <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
         <section className="rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 text-white shadow-xl md:p-10">
           <div>
+            <img
+              src={BRAND_LOGO_FULL}
+              alt="Logo CordasLivre"
+              className="mb-5 h-14 w-auto max-w-full object-contain md:h-16"
+              loading="eager"
+              decoding="async"
+            />
             <h2 className="text-3xl font-extrabold leading-tight md:text-5xl">
               Encontre a melhor corda para seu instrumento.
             </h2>
