@@ -73,6 +73,7 @@ const resolveApiBaseUrl = () => {
 const API_BASE_URL = resolveApiBaseUrl();
 const BRAND_LOGO_FULL = '/branding/logo-full.png';
 const BRAND_LOGO_MARK = '/branding/logo-mark.png';
+const BRAND_LOGO_SUPPORT = '/branding/logo-support.png';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -213,7 +214,7 @@ export default function App() {
             <img
               src={BRAND_LOGO_FULL}
               alt="Logo CordasLivre"
-              className="mb-5 h-14 w-auto max-w-full object-contain md:h-16"
+              className="mb-5 h-20 w-auto max-w-full object-contain md:h-24"
               loading="eager"
               decoding="async"
             />
@@ -382,6 +383,15 @@ export default function App() {
             <p className="rounded-lg bg-slate-50 p-4">Veja primeiro os produtos com melhor prova social para reduzir risco na compra.</p>
             <p className="rounded-lg bg-slate-50 p-4">Filtre por instrumento e encontre a melhor corda para seu perfil em segundos.</p>
             <p className="rounded-lg bg-slate-50 p-4">Acesse a oferta e finalize no Mercado Livre com total segurança.</p>
+          </div>
+          <div className="mt-6 flex justify-center rounded-xl bg-slate-50 p-4">
+            <img
+              src={BRAND_LOGO_SUPPORT}
+              alt="Marca CordasLivre"
+              className="h-28 w-auto max-w-full object-contain md:h-36"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </section>
       </main>
