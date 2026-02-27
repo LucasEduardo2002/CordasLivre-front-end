@@ -10,8 +10,8 @@
   "description": "Compare cordas por instrumento e gere avaliação por IA antes de comprar.",
   "icons": [
     {
-      "src": "/branding/favicon-mark.png?v=3",
-      "sizes": "1164x1163",
+      "src": "/branding/favicon-mark.png?v=4",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
