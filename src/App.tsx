@@ -71,7 +71,7 @@ const resolveApiBaseUrl = () => {
 };
 
 const API_BASE_URL = resolveApiBaseUrl();
-const BRAND_LOGO_FULL = '/branding/logo-full.png';
+const BRAND_LOGO_FULL = '/branding/logo-full-cropped.png';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -184,7 +184,7 @@ export default function App() {
             <img
               src={BRAND_LOGO_FULL}
               alt="Logo CordasLivre"
-              className="h-10 w-auto max-w-[220px] object-contain md:h-12 md:max-w-[300px]"
+              className="h-12 w-auto max-w-[220px] object-contain md:h-14 md:max-w-[280px]"
               loading="eager"
               decoding="async"
             />
@@ -208,7 +208,7 @@ export default function App() {
             <img
               src={BRAND_LOGO_FULL}
               alt="Logo CordasLivre"
-              className="mb-5 h-16 w-auto max-w-full object-contain md:h-20"
+              className="mb-5 h-24 w-auto max-w-full object-contain md:h-28"
               loading="eager"
               decoding="async"
             />
