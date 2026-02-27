@@ -71,8 +71,8 @@ const resolveApiBaseUrl = () => {
 };
 
 const API_BASE_URL = resolveApiBaseUrl();
-const BRAND_LOGO_FULL = '/branding/logo-full.svg';
-const BRAND_LOGO_MARK = '/branding/logo-mark.svg';
+const BRAND_LOGO_FULL = '/branding/logo-full.png';
+const BRAND_LOGO_MARK = '/branding/logo-mark.png';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
