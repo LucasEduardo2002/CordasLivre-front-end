@@ -72,8 +72,6 @@ const resolveApiBaseUrl = () => {
 
 const API_BASE_URL = resolveApiBaseUrl();
 const BRAND_LOGO_FULL = '/branding/logo-full.png';
-const BRAND_LOGO_MARK = '/branding/logo-mark.png';
-const BRAND_LOGO_SUPPORT = '/branding/logo-support.png';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -184,16 +182,12 @@ export default function App() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6">
           <div className="flex items-center gap-3">
             <img
-              src={BRAND_LOGO_MARK}
-              alt="Símbolo CordasLivre"
-              className="h-10 w-10 rounded-full object-cover"
+              src={BRAND_LOGO_FULL}
+              alt="Logo CordasLivre"
+              className="h-10 w-auto max-w-[220px] object-contain md:h-12 md:max-w-[300px]"
               loading="eager"
               decoding="async"
             />
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Top 10 + avaliação por IA</p>
-              <h1 className="text-lg font-bold md:text-xl">CordasLivre</h1>
-            </div>
           </div>
           <a
             href={hasTopProduct ? topProduct?.permalink : '#ranking'}
@@ -214,7 +208,7 @@ export default function App() {
             <img
               src={BRAND_LOGO_FULL}
               alt="Logo CordasLivre"
-              className="mb-5 h-20 w-auto max-w-full object-contain md:h-24"
+              className="mb-5 h-16 w-auto max-w-full object-contain md:h-20"
               loading="eager"
               decoding="async"
             />
@@ -383,15 +377,6 @@ export default function App() {
             <p className="rounded-lg bg-slate-50 p-4">Veja primeiro os produtos com melhor prova social para reduzir risco na compra.</p>
             <p className="rounded-lg bg-slate-50 p-4">Filtre por instrumento e encontre a melhor corda para seu perfil em segundos.</p>
             <p className="rounded-lg bg-slate-50 p-4">Acesse a oferta e finalize no Mercado Livre com total segurança.</p>
-          </div>
-          <div className="mt-6 flex justify-center rounded-xl bg-slate-50 p-4">
-            <img
-              src={BRAND_LOGO_SUPPORT}
-              alt="Marca CordasLivre"
-              className="h-28 w-auto max-w-full object-contain md:h-36"
-              loading="lazy"
-              decoding="async"
-            />
           </div>
         </section>
       </main>
