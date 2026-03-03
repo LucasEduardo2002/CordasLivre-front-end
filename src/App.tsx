@@ -38,6 +38,27 @@ interface AiReviewResponse {
   review: AiReviewData;
 }
 
+interface WebSearchItem {
+  id: string;
+  title: string;
+  price: number | null;
+  currency: string;
+  source: string;
+  permalink: string;
+  thumbnail: string | null;
+  instrumentType: StringType;
+}
+
+interface WebSearchResponse {
+  query: string;
+  instrumentType: StringType;
+  cached: boolean;
+  providers: string[];
+  total: number;
+  fetchedAt: string;
+  results: WebSearchItem[];
+}
+
 const stringTypeOptions: Array<{ value: StringType; label: string }> = [
   { value: 'VIOLAO', label: 'Violão' },
   { value: 'GUITARRA', label: 'Guitarra' },
@@ -83,6 +104,10 @@ export default function App() {
   const [aiReviewError, setAiReviewError] = useState<string | null>(null);
   const [aiReviewData, setAiReviewData] = useState<AiReviewData | null>(null);
   const [aiReviewProduct, setAiReviewProduct] = useState<Product | null>(null);
+  const [webSearchQuery, setWebSearchQuery] = useState('encordoamento violão');
+  const [webSearchLoading, setWebSearchLoading] = useState(false);
+  const [webSearchError, setWebSearchError] = useState<string | null>(null);
+  const [webSearchData, setWebSearchData] = useState<WebSearchResponse | null>(null);
 
   const formatPrice = (value: number) =>
     value.toLocaleString('pt-BR', {
@@ -103,6 +128,19 @@ export default function App() {
     if (confidence === 'alta') return 'Alta';
     if (confidence === 'baixa') return 'Baixa';
     return 'Média';
+  };
+
+  const formatWebPrice = (price: number | null) => {
+    if (price === null) {
+      return 'Preço indisponível';
+    }
+
+    return formatPrice(price);
+  };
+
+  const getDefaultWebQuery = (type: StringType) => {
+    const label = stringTypeOptions.find((option) => option.value === type)?.label ?? 'Violão';
+    return `encordoamento ${label.toLowerCase()}`;
   };
 
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -158,6 +196,35 @@ export default function App() {
     }
   };
 
+  const handleWebSearch = async () => {
+    const normalizedQuery = webSearchQuery.trim();
+    if (normalizedQuery.length < 3) {
+      setWebSearchError('Digite pelo menos 3 caracteres para buscar na web.');
+      return;
+    }
+
+    setWebSearchLoading(true);
+    setWebSearchError(null);
+
+    try {
+      const response = await axios.get<WebSearchResponse>(`${API_BASE_URL}/strings/web-search`, {
+        timeout: 25000,
+        params: {
+          q: normalizedQuery,
+          type: selectedType,
+          limit: 16,
+        },
+      });
+
+      setWebSearchData(response.data);
+    } catch (error) {
+      console.error('Erro na busca web:', error);
+      setWebSearchError('Não foi possível buscar ofertas na web agora. Tente novamente em instantes.');
+    } finally {
+      setWebSearchLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     fetchProductsWithRetry(selectedType)
@@ -170,6 +237,12 @@ export default function App() {
         console.error('Erro ao conectar com o Back-end após tentativas:', err);
       })
       .finally(() => setLoading(false));
+  }, [selectedType]);
+
+  useEffect(() => {
+    setWebSearchQuery(getDefaultWebQuery(selectedType));
+    setWebSearchData(null);
+    setWebSearchError(null);
   }, [selectedType]);
 
   const topProduct = products.find((product) => product.rank === 1) || products[0];
@@ -268,6 +341,89 @@ export default function App() {
           <p className="mt-2 text-xs font-medium text-indigo-800">
             O ranking abaixo é atualizado conforme o instrumento selecionado.
           </p>
+        </section>
+
+        <section className="mt-6 rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 p-4 shadow-md md:p-5">
+          <div className="mb-4 flex items-start justify-between gap-3 md:items-center">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-wide text-emerald-700">Passo 2</p>
+              <h3 className="text-lg font-extrabold text-slate-900 md:text-xl">Buscar melhores preços na web</h3>
+            </div>
+          </div>
+
+          <div className="grid gap-2 md:grid-cols-[1fr_auto]">
+            <input
+              type="text"
+              value={webSearchQuery}
+              onChange={(event) => setWebSearchQuery(event.target.value)}
+              placeholder="Ex.: encordoamento violão d'addario 0.10"
+              className="rounded-lg border border-emerald-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500"
+            />
+            <button
+              type="button"
+              onClick={handleWebSearch}
+              disabled={webSearchLoading}
+              className={`rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition ${
+                webSearchLoading ? 'cursor-wait bg-emerald-400' : 'bg-emerald-600 hover:bg-emerald-500'
+              }`}
+            >
+              {webSearchLoading ? 'Buscando...' : 'Buscar na web'}
+            </button>
+          </div>
+
+          <p className="mt-2 text-xs font-medium text-emerald-800">
+            Busca agregada com cache curto para evitar banco de dados gigante.
+          </p>
+
+          {webSearchError && (
+            <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{webSearchError}</div>
+          )}
+
+          {webSearchData && (
+            <div className="mt-4">
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-emerald-800">
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1">{webSearchData.total} ofertas</span>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1">Fontes: {webSearchData.providers.join(', ')}</span>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-1">
+                  {webSearchData.cached ? 'Resultado em cache' : 'Resultado em tempo real'}
+                </span>
+              </div>
+
+              {webSearchData.results.length === 0 ? (
+                <div className="rounded-lg border border-emerald-200 bg-white p-3 text-sm text-emerald-900">
+                  Nenhuma oferta encontrada para essa consulta. Tente um termo mais específico.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {webSearchData.results.map((item) => (
+                    <article key={item.id} className="rounded-xl border border-emerald-200 bg-white p-3">
+                      <div className="flex items-start gap-3">
+                        <img
+                          src={item.thumbnail || '/branding/logo-mark.svg'}
+                          alt={item.title}
+                          className="h-16 w-16 rounded-lg bg-slate-50 p-1 object-contain"
+                          loading="lazy"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-2 text-sm font-semibold text-slate-900">{item.title}</p>
+                          <p className="mt-1 text-xs font-medium text-slate-600">{item.source}</p>
+                          <p className="mt-1 text-lg font-extrabold text-emerald-700">{formatWebPrice(item.price)}</p>
+                        </div>
+                      </div>
+                      <a
+                        href={item.permalink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                      >
+                        Ver oferta
+                      </a>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {hasError && (
