@@ -371,10 +371,6 @@ export default function App() {
             </button>
           </div>
 
-          <p className="mt-2 text-xs font-medium text-emerald-800">
-            Busca agregada com cache curto para evitar banco de dados gigante.
-          </p>
-
           {webSearchError && (
             <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{webSearchError}</div>
           )}
