@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import axios from 'axios';
+import { AprendaInstrumento } from './components/AprendaInstrumento';
+import { TermoDicionario } from './components/TermoDicionario';
 
 type StringType = 'VIOLAO' | 'GUITARRA' | 'CONTRABAIXO' | 'CAVAQUINHO' | 'VIOLA_CAIPIRA' | 'VIOLINO';
 
@@ -69,6 +72,21 @@ const stringTypeOptions: Array<{ value: StringType; label: string }> = [
 ];
 
 const DEFAULT_API_URL = 'https://cordaslivre-back-end.onrender.com';
+const DICTIONARY_TERMS = [
+  '0.10',
+  '0.11',
+  '0.12',
+  '0.13',
+  '0.14',
+  '0.15',
+  '0.16',
+  'Phosphor Bronze',
+  '80/20 Bronze',
+  'Bronze 80/20',
+  'Nylon',
+  'Aço',
+  'Aco',
+] as const;
 
 const resolveApiBaseUrl = () => {
   const envUrl = (import.meta.env.VITE_API_URL || '').trim();
@@ -93,6 +111,62 @@ const resolveApiBaseUrl = () => {
 
 const API_BASE_URL = resolveApiBaseUrl();
 const BRAND_LOGO_FULL = '/branding/logo-full-cropped.png';
+
+const splitTextByDictionaryTerms = (text: string) => {
+  const normalizedTerms = [...DICTIONARY_TERMS].sort((left, right) => right.length - left.length);
+  const segments: Array<{ text: string; term?: string }> = [];
+
+  let cursor = 0;
+
+  while (cursor < text.length) {
+    const rest = text.slice(cursor);
+    const match = normalizedTerms.find((term) => rest.toLowerCase().startsWith(term.toLowerCase()));
+
+    if (match) {
+      segments.push({ text: text.slice(cursor, cursor + match.length), term: match });
+      cursor += match.length;
+      continue;
+    }
+
+    let nextMatchIndex = text.length;
+
+    for (const term of normalizedTerms) {
+      const index = text.toLowerCase().indexOf(term.toLowerCase(), cursor + 1);
+      if (index !== -1 && index < nextMatchIndex) {
+        nextMatchIndex = index;
+      }
+    }
+
+    const nextChunk = text.slice(cursor, nextMatchIndex);
+    segments.push({ text: nextChunk });
+    cursor = nextMatchIndex;
+  }
+
+  return segments;
+};
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+const fetchProductsWithRetry = async (apiBaseUrl: string, type: StringType, retries = 5, delayMs = 2000): Promise<Product[]> => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await axios.get<Product[]>(`${apiBaseUrl}/strings`, {
+        timeout: 25000,
+        params: { type },
+      });
+      return response.data;
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) {
+        await wait(delayMs);
+      }
+    }
+  }
+
+  throw lastError;
+};
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -141,29 +215,6 @@ export default function App() {
   const getDefaultWebQuery = (type: StringType) => {
     const label = stringTypeOptions.find((option) => option.value === type)?.label ?? 'Violão';
     return `encordoamento ${label.toLowerCase()}`;
-  };
-
-  const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const fetchProductsWithRetry = async (type: StringType, retries = 5, delayMs = 2000): Promise<Product[]> => {
-    let lastError: unknown;
-
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        const response = await axios.get<Product[]>(`${API_BASE_URL}/strings`, {
-          timeout: 25000,
-          params: { type },
-        });
-        return response.data;
-      } catch (error) {
-        lastError = error;
-        if (attempt < retries) {
-          await wait(delayMs);
-        }
-      }
-    }
-
-    throw lastError;
   };
 
   const handleGenerateAiReview = async (product: Product) => {
@@ -227,7 +278,7 @@ export default function App() {
 
   useEffect(() => {
     setLoading(true);
-    fetchProductsWithRetry(selectedType)
+    fetchProductsWithRetry(API_BASE_URL, selectedType)
       .then((data) => {
         setProducts(data);
         setHasError(false);
@@ -248,6 +299,22 @@ export default function App() {
   const topProduct = products.find((product) => product.rank === 1) || products[0];
   const selectedTypeLabel = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violão';
   const hasTopProduct = Boolean(topProduct?.permalink);
+
+  const renderTitleWithDictionaryTerms = (title: string): ReactNode => {
+    const segments = splitTextByDictionaryTerms(title);
+
+    return segments.map((segment, index) => {
+      if (!segment.term) {
+        return <span key={`${segment.text}-${index}`}>{segment.text}</span>;
+      }
+
+      return (
+        <TermoDicionario key={`${segment.term}-${index}`} termo={segment.term} variant="inline">
+          {segment.text}
+        </TermoDicionario>
+      );
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-100 via-slate-50 to-white text-slate-900">
@@ -297,6 +364,12 @@ export default function App() {
                 className="rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
               >
                 Ver Top 10 agora
+              </a>
+              <a
+                href="#aprenda"
+                className="rounded-lg border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Aprenda sobre seu instrumento
               </a>
               <a
                 href={hasTopProduct ? topProduct?.permalink : '#ranking'}
@@ -422,6 +495,8 @@ export default function App() {
           )}
         </section>
 
+        <AprendaInstrumento />
+
         {hasError && (
           <section className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
               Não foi possível carregar os produtos agora. Verifique se o back-end está ativo e acessível em {API_BASE_URL}.
@@ -487,7 +562,7 @@ export default function App() {
                       {product.rank <= 3 ? 'Top destaque' : 'Produto em destaque'}
                     </p>
                     <h4 className="mt-2 min-h-12 text-sm font-semibold leading-5 text-slate-800">
-                      {product.title}
+                      {renderTitleWithDictionaryTerms(product.title)}
                     </h4>
                     <p className="mt-2 text-xs font-medium text-slate-600">
                       ⭐ {formatRating(product.ratingAvg)} · {formatRatingCount(product.ratingCount)}
