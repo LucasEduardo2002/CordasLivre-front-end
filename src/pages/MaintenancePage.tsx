@@ -98,13 +98,13 @@ export function MaintenancePage() {
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Vida útil das cordas</p>
-        <h1 className="relative z-10 mt-2 text-3xl font-black md:text-4xl">Acompanhe o desgaste e receba alertas</h1>
-        <p className="relative z-10 mt-3 max-w-3xl text-sm text-cyan-50 md:text-base">
+        <h1 className="cl-text-balance relative z-10 mt-2 text-3xl font-black md:text-4xl">Acompanhe o desgaste e receba alertas</h1>
+        <p className="cl-text-balance relative z-10 mt-3 max-w-3xl text-sm leading-6 text-cyan-50 md:text-base md:leading-7">
           Registre a troca, informe suas horas de estudo e veja quando as cordas começam a perder resposta e brilho.
         </p>
       </section>
 
-      <section className="cl-fade-up cl-delay-1 mt-6 rounded-2xl border border-cyan-200 bg-white p-5 shadow-sm">
+      <section className="cl-fade-up cl-delay-1 mt-6 rounded-2xl border border-cyan-200 bg-white p-5 shadow-sm md:p-6">
         <div className="grid gap-3">
           <label className="text-sm font-semibold text-slate-800">
             E-mail
@@ -177,7 +177,7 @@ export function MaintenancePage() {
         {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
 
         {saved && (
-          <div className="mt-5 rounded-xl border border-cyan-200 bg-cyan-50 p-4 text-sm text-cyan-900">
+          <div className="mt-5 rounded-xl border border-cyan-200 bg-cyan-50 p-4 text-sm text-cyan-900 shadow-sm">
             <p className="font-semibold">Monitoramento salvo com sucesso.</p>
             <p>Vida útil estimada: {saved.estimatedLifeDays} dias.</p>
             <p>Próximo alerta: {formatDate(saved.nextAlertDate)}.</p>
@@ -188,7 +188,7 @@ export function MaintenancePage() {
         {alerts.length > 0 && (
           <div className="mt-5 grid gap-3">
             {alerts.map((item) => (
-              <div key={item.id} className="rounded-xl border border-cyan-100 bg-slate-50/70 p-4 text-sm text-slate-800">
+              <div key={item.id} className="rounded-xl border border-cyan-100 bg-slate-50/70 p-4 text-sm text-slate-800 shadow-sm">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
                     className={`rounded-full px-2.5 py-1 text-xs font-bold ${

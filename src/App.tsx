@@ -10,7 +10,7 @@ const BRAND_LOGO_FULL = '/branding/logo-full-cropped.png';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(6,182,212,0.1),_transparent_40%),linear-gradient(to_bottom,_rgb(241,245,249),_rgb(248,250,252),_rgb(255,255,255))] text-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_right,_rgba(6,182,212,0.1),_transparent_40%),linear-gradient(to_bottom,_rgb(241,245,249),_rgb(248,250,252),_rgb(255,255,255))] text-slate-900">
       <header className="sticky top-0 z-20 border-b border-cyan-100 bg-white/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6">
           <NavLink to="/" className="flex items-center gap-2">

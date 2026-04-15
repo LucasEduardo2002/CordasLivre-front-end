@@ -104,8 +104,8 @@ export function ToneAssistantPage() {
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Assistente de timbre</p>
-        <h1 className="relative z-10 mt-2 max-w-3xl text-3xl font-black md:text-4xl">Recomendação mais assertiva para o seu som</h1>
-        <p className="relative z-10 mt-3 max-w-3xl text-sm text-cyan-50 md:text-base">
+        <h1 className="cl-text-balance relative z-10 mt-2 max-w-3xl text-3xl font-black md:text-4xl">Recomendação mais assertiva para o seu som</h1>
+        <p className="cl-text-balance relative z-10 mt-3 max-w-3xl text-sm leading-6 text-cyan-50 md:text-base md:leading-7">
           Baseado em perfil de instrumento, nível e estilo, com critérios técnicos de tensão e faixas de calibre usadas no mercado.
         </p>
       </section>
@@ -208,7 +208,7 @@ export function ToneAssistantPage() {
               </span>
             </div>
 
-            <div className="rounded-xl border border-cyan-200 bg-white p-4">
+            <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm font-semibold text-cyan-900">Compatibilidade da recomendação</p>
                 <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${compatibilityToneClasses[result.compatibilityTone].badge}`}>
@@ -241,13 +241,13 @@ export function ToneAssistantPage() {
               </article>
             </div>
 
-            <div className="rounded-xl border border-cyan-200 bg-white p-4">
+            <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <p className="text-sm font-semibold text-cyan-900">Resumo da recomendação</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">{result.explanation}</p>
               <p className="mt-2 text-xs font-medium text-cyan-800">{result.nextStep}</p>
             </div>
 
-            <div className="rounded-xl border border-cyan-200 bg-white p-4">
+            <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <p className="text-sm font-semibold text-cyan-900">Fatores usados na decisão</p>
               <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
                 {result.decisionFactors.map((factor) => (
@@ -259,7 +259,7 @@ export function ToneAssistantPage() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-cyan-200 bg-white p-4">
+            <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <p className="text-sm font-semibold text-cyan-900">Referências técnicas utilizadas</p>
               <div className="mt-2 space-y-2">
                 {result.referenceSources.map((source) => (

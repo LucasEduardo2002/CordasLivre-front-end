@@ -166,8 +166,8 @@ export function RankPage() {
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Ranking atualizado</p>
-        <h1 className="relative z-10 mt-2 text-3xl font-black md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
-        <p className="relative z-10 mt-3 max-w-3xl text-sm text-cyan-50 md:text-base">
+        <h1 className="cl-text-balance relative z-10 mt-2 text-3xl font-black md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
+        <p className="cl-text-balance relative z-10 mt-3 max-w-3xl text-sm leading-6 text-cyan-50 md:text-base md:leading-7">
           Veja os produtos mais bem posicionados, compare preços e abra os termos técnicos no título para entender cada item com rapidez.
         </p>
 
@@ -221,7 +221,7 @@ export function RankPage() {
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-cyan-700">Pesquisa web</p>
-            <h2 className="mt-1 text-lg font-bold text-slate-900">Buscar melhores preços na web</h2>
+            <h2 className="cl-text-balance mt-1 text-lg font-bold text-slate-900">Buscar melhores preços na web</h2>
           </div>
           <span className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-100 text-lg font-bold text-cyan-700">
             {isWebPanelOpen ? '−' : '+'}
@@ -311,7 +311,7 @@ export function RankPage() {
         {loading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-4">
+              <div key={index} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <div className="mb-4 h-40 rounded-lg bg-slate-200" />
                 <div className="h-3 w-16 rounded bg-slate-200" />
                 <div className="mt-3 h-4 w-full rounded bg-slate-200" />
@@ -320,7 +320,7 @@ export function RankPage() {
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-600">
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-600 shadow-sm">
             Sem resultados para <strong>{selectedTypeLabel}</strong> no momento.
           </div>
         ) : (

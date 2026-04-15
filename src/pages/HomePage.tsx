@@ -95,14 +95,14 @@ export function HomePage() {
         <div className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
 
         <p className="relative z-10 text-xs font-bold uppercase tracking-[0.32em] text-amber-300">CordasLivre</p>
-        <h1 className="relative z-10 mt-3 max-w-3xl text-3xl font-black leading-tight md:text-5xl">
+        <h1 className="cl-text-balance relative z-10 mt-3 max-w-3xl text-3xl font-black leading-tight md:text-5xl">
           Compre encordoamento com mais precisão e menos incerteza.
         </h1>
-        <p className="relative z-10 mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
+        <p className="cl-text-balance relative z-10 mt-4 max-w-2xl text-sm leading-6 text-slate-200 md:text-base md:leading-7">
           Plataforma pensada para quem quer decidir rápido: ranking claro, explicações objetivas, recomendação de timbre e monitoramento da vida útil.
         </p>
 
-        <div className="relative z-10 mt-6 grid gap-3 sm:grid-cols-3">
+        <div className="relative z-10 mt-6 grid gap-3 sm:grid-cols-3 md:gap-4">
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <p className="text-2xl font-black text-white">4</p>
             <p className="text-xs uppercase tracking-wide text-slate-200">módulos integrados</p>
@@ -132,8 +132,8 @@ export function HomePage() {
               </div>
               <span className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wide">{card.badge}</span>
             </div>
-            <h2 className="relative z-10 mt-4 text-xl font-black">{card.title}</h2>
-            <p className="relative z-10 mt-2 text-sm leading-6 opacity-95">{card.description}</p>
+            <h2 className="cl-text-balance relative z-10 mt-4 text-xl font-black">{card.title}</h2>
+            <p className="cl-text-balance relative z-10 mt-2 text-sm leading-6 opacity-95">{card.description}</p>
             <span className="relative z-10 mt-5 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold uppercase tracking-wide">
               Abrir página
               <ArrowIcon className="h-4 w-4" />
@@ -144,7 +144,7 @@ export function HomePage() {
 
       <section className="cl-fade-up cl-delay-2 mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-500">Como funciona</p>
-        <h2 className="mt-2 text-2xl font-black text-slate-900 md:text-3xl">Comece em menos de 2 minutos</h2>
+        <h2 className="cl-text-balance mt-2 text-2xl font-black text-slate-900 md:text-3xl">Comece em menos de 2 minutos</h2>
 
         <div className="mt-5 grid gap-3 md:grid-cols-3">
           {quickFlow.map((item, index) => (

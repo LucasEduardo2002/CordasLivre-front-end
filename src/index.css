@@ -13,6 +13,12 @@ body {
   margin: 0;
   background-color: var(--color-slate-50);
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.cl-text-balance {
+  text-wrap: balance;
 }
 
 @keyframes clFadeUp {
