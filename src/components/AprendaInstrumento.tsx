@@ -24,48 +24,54 @@ type Tip = {
 
 const iconClass = 'h-4 w-4';
 
+const IconFrequency = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
+    <path d="M4 12h2l2-4 2 8 2-6 2 4h2" />
+    <path d="M4 20h16" />
+  </svg>
+);
+
+const IconHarmony = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
+    <circle cx="8" cy="8" r="2" />
+    <circle cx="16" cy="8" r="2" />
+    <circle cx="12" cy="14" r="2" />
+    <path d="M8 10l4 3 4-3" />
+  </svg>
+);
+
+const IconComfort = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
+    <path d="M6 10c0-2 1-3 2-4l2-2" />
+    <path d="M18 10c0-2-1-3-2-4l-2-2" />
+    <path d="M7 8v10c0 2 2 3 5 3s5-1 5-3V8" />
+  </svg>
+);
+
 const IconGauge = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M4 14a8 8 0 1 1 16 0" />
-    <path d="m12 12 4-3" />
+    <path d="M3 12h4" />
+    <path d="M17 12h4" />
+    <path d="M8 16.2l-2.8 2.8" />
+    <path d="M18.8 5.2l2.8 2.8" />
+    <circle cx="12" cy="12" r="5" />
+    <path d="M12 12l3-3" />
   </svg>
 );
 
-const IconDrop = () => (
+const IconMaterial = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M12 3c3 4 6 7 6 10a6 6 0 1 1-12 0c0-3 3-6 6-10Z" />
+    <path d="M4 6l8-3 8 3v9c0 4-8 5-8 5s-8-1-8-5V6Z" />
+    <path d="M12 3v9" />
   </svg>
 );
 
-const IconHand = () => (
+const IconTension = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M7 12V7a1 1 0 1 1 2 0v4" />
-    <path d="M9 11V6a1 1 0 1 1 2 0v5" />
-    <path d="M11 11V5a1 1 0 1 1 2 0v6" />
-    <path d="M13 11V7a1 1 0 1 1 2 0v6c0 3-2 6-5 6S5 17 5 14v-2a1 1 0 1 1 2 0Z" />
-  </svg>
-);
-
-const IconRuler = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="m4 14 6 6L20 10l-6-6Z" />
-    <path d="m11 7 6 6" />
-  </svg>
-);
-
-const IconLab = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M10 3v5l-4 7a3 3 0 0 0 3 4h6a3 3 0 0 0 3-4l-4-7V3" />
-    <path d="M9 8h6" />
-  </svg>
-);
-
-const IconBalance = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M12 4v15" />
-    <path d="M7 8h10" />
-    <path d="m7 8-3 5h6Z" />
-    <path d="m17 8-3 5h6Z" />
+    <path d="M4 6c0-1 2-2 8-2s8 1 8 2" />
+    <path d="M12 4v16" />
+    <path d="M4 6v10c0 1-2 2-8 2" />
+    <path d="M20 6v10c0 1 2 2 8 2" />
   </svg>
 );
 
@@ -93,10 +99,13 @@ const IconTool = () => (
   </svg>
 );
 
-const IconCompass = () => (
+const IconGuitar = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <circle cx="12" cy="12" r="8" />
-    <path d="m10 10 6-2-2 6-6 2 2-6Z" />
+    <circle cx="12" cy="16" r="3" />
+    <path d="M12 3v10" />
+    <path d="M8 7h8" />
+    <path d="M9 11h6" />
+    <path d="M10 14h4" />
   </svg>
 );
 
@@ -105,41 +114,41 @@ const learningCards: LearningCard[] = [
     eyebrow: 'Material',
     title: 'Bronze 80/20',
     tone: 'amber',
-    icon: <IconGauge />,
+    icon: <IconFrequency />,
     body: (
       <>
-        E uma liga com 80% de cobre e 20% de zinco. O resultado costuma ser um som mais brilhante e com ataque claro,
-        util para quem quer definicao nas notas e nas palhetadas.
+        É uma liga com 80% de cobre e 20% de zinco. O resultado costuma ser um som mais brilhante e com ataque claro,
+        útil para quem quer definição nas notas e nas palhetadas.
       </>
     ),
   },
   {
-    eyebrow: 'Equilibrio',
+    eyebrow: 'Equilíbrio',
     title: 'Phosphor Bronze',
     tone: 'indigo',
-    icon: <IconDrop />,
+    icon: <IconHarmony />,
     body: (
       <>
-        Adiciona fosforo a liga e tende a entregar mais calor, sustain e equilibrio tonal. Em muitos modelos, aparece ao lado de{' '}
+        Adiciona fósforo à liga e tende a entregar mais calor, sustain e equilíbrio tonal. Em muitos modelos, aparece ao lado de{' '}
         <TermoDicionario termo="0.10" variant="inline">
           0.10
         </TermoDicionario>{' '}
-        para indicar um conjunto leve e confortavel.
+        para indicar um conjunto leve e confortável.
       </>
     ),
   },
   {
     eyebrow: 'Conforto',
-    title: 'Tensao e braco do violao',
+    title: 'Tensão e braço do violão',
     tone: 'emerald',
-    icon: <IconHand />,
+    icon: <IconComfort />,
     body: (
       <>
-        Quanto maior a tensao, maior a resistencia sentida na mao e no braco do instrumento. Por isso,{' '}
+        Quanto maior a tensão, maior a resistência sentida na mão e no braço do instrumento. Por isso,{' '}
         <TermoDicionario termo="Nylon" variant="inline">
           nylon
         </TermoDicionario>{' '}
-        costuma ser mais macio, enquanto cordas de aco exigem mais estrutura e regulagem.
+        costuma ser mais macio, enquanto cordas de aço exigem mais estrutura e regulagem.
       </>
     ),
   },
@@ -149,37 +158,37 @@ const anatomyRows: AnatomyRow[] = [
   {
     label: 'Calibre',
     value: '0.10 / 0.11 / 0.12',
-    description: 'Define a espessura e muda a sensacao de toque.',
-    icon: <IconRuler />,
+    description: 'Define a espessura e muda a sensação de toque.',
+    icon: <IconGauge />,
   },
   {
     label: 'Liga',
     value: 'Bronze 80/20 / Phosphor Bronze',
-    description: 'Afeta brilho, resposta e duracao do timbre.',
-    icon: <IconLab />,
+    description: 'Afeta brilho, resposta e duração do timbre.',
+    icon: <IconMaterial />,
   },
   {
-    label: 'Tensao',
-    value: 'Baixa / Media / Alta',
-    description: 'Influencia o esforco na mao e no braco do violao.',
-    icon: <IconBalance />,
+    label: 'Tensão',
+    value: 'Baixa / Média / Alta',
+    description: 'Influencia o esforço na mão e no braço do violão.',
+    icon: <IconTension />,
   },
 ];
 
 const quickTips: Tip[] = [
   {
-    title: 'Comece pelo seu nivel',
-    body: 'Iniciante: priorize conforto (calibres leves). Intermediario: experimente tensao media para mais projecao.',
+    title: 'Comece pelo seu nível',
+    body: 'Iniciante: priorize conforto (calibres leves). Intermediário: experimente tensão média para mais projeção.',
     icon: <IconTarget />,
   },
   {
     title: 'Olhe o estilo musical',
-    body: 'Dedilhado e voz pedem equilibrio; batida forte combina com ataque mais brilhante.',
+    body: 'Dedilhado e voz pedem equilíbrio; batida forte combina com ataque mais brilhante.',
     icon: <IconMusic />,
   },
   {
-    title: 'Considere a manutencao',
-    body: 'Suor e umidade aceleram desgaste. Limpeza pos-uso aumenta a vida util das cordas.',
+    title: 'Considere a manutenção',
+    body: 'Suor e umidade aceleram desgaste. Limpeza pós-uso aumenta a vida útil das cordas.',
     icon: <IconTool />,
   },
 ];
@@ -207,13 +216,13 @@ export function AprendaInstrumento() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">Anatomia da corda</p>
-              <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">O que observar no anuncio</h3>
+              <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">O que observar no anúncio</h3>
             </div>
             <span
               aria-hidden="true"
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700"
             >
-              <IconCompass />
+              <IconGuitar />
             </span>
           </div>
 
@@ -239,8 +248,8 @@ export function AprendaInstrumento() {
         </div>
 
         <aside className="rounded-3xl border border-cyan-100 bg-white p-4 shadow-sm sm:p-6">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">Checklist rapido</p>
-          <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">Escolha com mais seguranca</h3>
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">Checklist rápido</p>
+          <h3 className="mt-2 text-xl font-black text-slate-900 sm:text-2xl">Escolha com mais segurança</h3>
           <div className="mt-5 grid gap-3">
             {quickTips.map((tip) => (
               <article key={tip.title} className="rounded-2xl border border-cyan-100 bg-cyan-50/70 p-4">
