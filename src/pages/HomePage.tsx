@@ -90,15 +90,15 @@ const quickFlow = [
 export function HomePage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-slate-700/20 bg-[linear-gradient(125deg,_rgba(7,18,37,1),_rgba(24,37,67,1),_rgba(9,53,88,1))] p-6 text-white shadow-xl md:p-10">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-slate-700/20 bg-[linear-gradient(125deg,_rgba(7,18,37,1),_rgba(24,37,67,1),_rgba(9,53,88,1))] p-5 text-white shadow-xl sm:p-6 md:p-10">
         <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
 
         <p className="relative z-10 text-xs font-bold uppercase tracking-[0.32em] text-amber-300">CordasLivre</p>
-        <h1 className="cl-text-balance relative z-10 mt-3 max-w-3xl text-3xl font-black leading-tight md:text-5xl">
+        <h1 className="cl-text-balance relative z-10 mt-3 max-w-3xl text-3xl font-black leading-tight sm:text-4xl md:text-5xl">
           Compre encordoamento com mais precisão e menos incerteza.
         </h1>
-        <p className="cl-text-balance relative z-10 mt-4 max-w-2xl text-sm leading-6 text-slate-200 md:text-base md:leading-7">
+        <p className="cl-text-balance relative z-10 mt-4 max-w-2xl text-sm leading-6 text-slate-200 sm:text-[15px] md:text-base md:leading-7">
           Plataforma pensada para quem quer decidir rápido: ranking claro, explicações objetivas, recomendação de timbre e monitoramento da vida útil.
         </p>
 
@@ -118,12 +118,12 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 md:grid-cols-2">
+      <section className="mt-6 grid gap-4 sm:grid-cols-2">
         {cards.map((card, index) => (
           <Link
             key={card.title}
             to={card.path}
-            className={`cl-fade-up ${index === 0 ? 'cl-delay-1' : index === 1 ? 'cl-delay-2' : 'cl-delay-3'} group relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${card.tone}`}
+            className={`cl-fade-up ${index === 0 ? 'cl-delay-1' : index === 1 ? 'cl-delay-2' : 'cl-delay-3'} group relative overflow-hidden rounded-3xl bg-gradient-to-br p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6 ${card.tone}`}
           >
             <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/15 transition duration-300 group-hover:scale-110" />
             <div className="relative z-10 flex items-start justify-between gap-3">
@@ -142,11 +142,11 @@ export function HomePage() {
         ))}
       </section>
 
-      <section className="cl-fade-up cl-delay-2 mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+      <section className="cl-fade-up cl-delay-2 mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 md:p-8">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-500">Como funciona</p>
         <h2 className="cl-text-balance mt-2 text-2xl font-black text-slate-900 md:text-3xl">Comece em menos de 2 minutos</h2>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
           {quickFlow.map((item, index) => (
             <article key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:border-slate-300 hover:bg-white">
               <p className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{index + 1}</p>

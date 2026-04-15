@@ -162,16 +162,16 @@ export function RankPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-6 text-white shadow-xl md:p-8">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-5 text-white shadow-xl sm:p-6 md:p-8">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Ranking atualizado</p>
-        <h1 className="cl-text-balance relative z-10 mt-2 text-3xl font-black md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
+        <h1 className="cl-text-balance relative z-10 mt-2 text-3xl font-black leading-tight sm:text-4xl md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
         <p className="cl-text-balance relative z-10 mt-3 max-w-3xl text-sm leading-6 text-cyan-50 md:text-base md:leading-7">
           Veja os produtos mais bem posicionados, compare preços e abra os termos técnicos no título para entender cada item com rapidez.
         </p>
 
-        <div className="relative z-10 mt-5 flex flex-wrap gap-2">
+        <div className="relative z-10 mt-5 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
           {stringTypeOptions.map((option) => {
             const active = option.value === selectedType;
             return (
@@ -191,12 +191,12 @@ export function RankPage() {
           })}
         </div>
 
-        <div className="relative z-10 mt-5 flex flex-wrap gap-3">
+        <div className="relative z-10 mt-5 flex">
           <a
             href={topProduct?.permalink || '#'}
             target="_blank"
             rel="noopener noreferrer"
-            className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition ${
+            className={`inline-flex w-full justify-center rounded-lg px-4 py-2 text-sm font-semibold text-white transition sm:w-auto ${
               topProduct?.permalink ? 'bg-amber-500 hover:bg-amber-400' : 'pointer-events-none bg-white/30'
             }`}
           >
@@ -248,7 +248,7 @@ export function RankPage() {
                 type="button"
                 onClick={handleWebSearch}
                 disabled={webSearchLoading}
-                className={`rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition ${
+                className={`w-full rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition md:w-auto ${
                   webSearchLoading ? 'cursor-wait bg-cyan-400' : 'bg-cyan-600 hover:bg-cyan-500'
                 }`}
               >

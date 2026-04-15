@@ -100,7 +100,7 @@ export function ToneAssistantPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-6 text-white shadow-xl md:p-8">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-5 text-white shadow-xl sm:p-6 md:p-8">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Assistente de timbre</p>
@@ -110,8 +110,8 @@ export function ToneAssistantPage() {
         </p>
       </section>
 
-      <section className="cl-fade-up cl-delay-1 mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
-        <div className="flex items-center gap-2">
+      <section className="cl-fade-up cl-delay-1 mt-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 md:p-6">
+        <div className="flex flex-wrap items-center gap-2">
           {[1, 2, 3].map((currentStep) => (
             <button
               key={currentStep}
@@ -166,11 +166,11 @@ export function ToneAssistantPage() {
           )}
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <button
             type="button"
             onClick={() => setStep((prev) => (prev > 1 ? ((prev - 1) as 1 | 2 | 3) : prev))}
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="w-full rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
           >
             Voltar
           </button>
@@ -178,7 +178,7 @@ export function ToneAssistantPage() {
             <button
               type="button"
               onClick={() => setStep((prev) => (prev < 3 ? ((prev + 1) as 1 | 2 | 3) : prev))}
-              className="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500"
+              className="w-full rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500 sm:w-auto"
             >
               Próximo
             </button>
@@ -187,7 +187,7 @@ export function ToneAssistantPage() {
               type="button"
               onClick={submit}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500 disabled:cursor-wait disabled:bg-cyan-400"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-500 disabled:cursor-wait disabled:bg-cyan-400 sm:w-auto"
             >
               <SparkIcon className="h-4 w-4" />
               {loading ? 'Gerando...' : 'Gerar recomendação'}
@@ -226,7 +226,7 @@ export function ToneAssistantPage() {
               </p>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
               <article className="rounded-xl border border-cyan-200 bg-white p-3">
                 <p className="text-xs font-bold uppercase tracking-wide text-cyan-700">Calibre</p>
                 <p className="mt-1 text-sm font-semibold text-slate-900">{result.recommendedGauge}</p>
@@ -261,7 +261,7 @@ export function ToneAssistantPage() {
 
             <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <p className="text-sm font-semibold text-cyan-900">Referências técnicas utilizadas</p>
-              <div className="mt-2 space-y-2">
+                <div className="mt-2 space-y-2">
                 {result.referenceSources.map((source) => (
                   <a
                     key={source.url}

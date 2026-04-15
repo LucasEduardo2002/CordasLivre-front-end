@@ -94,7 +94,7 @@ export function MaintenancePage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-6 text-white shadow-xl md:p-8">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-5 text-white shadow-xl sm:p-6 md:p-8">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Vida útil das cordas</p>
@@ -104,7 +104,7 @@ export function MaintenancePage() {
         </p>
       </section>
 
-      <section className="cl-fade-up cl-delay-1 mt-6 rounded-2xl border border-cyan-200 bg-white p-5 shadow-sm md:p-6">
+      <section className="cl-fade-up cl-delay-1 mt-6 rounded-2xl border border-cyan-200 bg-white p-4 shadow-sm sm:p-5 md:p-6">
         <div className="grid gap-3">
           <label className="text-sm font-semibold text-slate-800">
             E-mail
@@ -155,12 +155,12 @@ export function MaintenancePage() {
           </label>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <button
             type="button"
             onClick={saveMaintenance}
             disabled={loading}
-            className="rounded-xl bg-cyan-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-600 disabled:cursor-wait disabled:bg-cyan-400"
+            className="w-full rounded-xl bg-cyan-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-600 disabled:cursor-wait disabled:bg-cyan-400 sm:w-auto"
           >
             {loading ? 'Salvando...' : 'Salvar monitoramento'}
           </button>
@@ -168,7 +168,7 @@ export function MaintenancePage() {
             type="button"
             onClick={loadAlerts}
             disabled={loading}
-            className="rounded-xl border border-cyan-300 px-4 py-2 text-sm font-semibold text-cyan-800 transition hover:bg-cyan-50 disabled:cursor-wait"
+            className="w-full rounded-xl border border-cyan-300 px-4 py-2 text-sm font-semibold text-cyan-800 transition hover:bg-cyan-50 disabled:cursor-wait sm:w-auto"
           >
             Ver alertas
           </button>
