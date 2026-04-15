@@ -90,7 +90,7 @@ const quickFlow = [
 export function HomePage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-700/20 bg-[linear-gradient(125deg,_rgba(7,18,37,1),_rgba(24,37,67,1),_rgba(9,53,88,1))] p-6 text-white shadow-xl md:p-10">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-slate-700/20 bg-[linear-gradient(125deg,_rgba(7,18,37,1),_rgba(24,37,67,1),_rgba(9,53,88,1))] p-6 text-white shadow-xl md:p-10">
         <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
 
@@ -119,11 +119,11 @@ export function HomePage() {
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-2">
-        {cards.map((card) => (
+        {cards.map((card, index) => (
           <Link
             key={card.title}
             to={card.path}
-            className={`group relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${card.tone}`}
+            className={`cl-fade-up ${index === 0 ? 'cl-delay-1' : index === 1 ? 'cl-delay-2' : 'cl-delay-3'} group relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${card.tone}`}
           >
             <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/15 transition duration-300 group-hover:scale-110" />
             <div className="relative z-10 flex items-start justify-between gap-3">
@@ -142,7 +142,7 @@ export function HomePage() {
         ))}
       </section>
 
-      <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+      <section className="cl-fade-up cl-delay-2 mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
         <p className="text-xs font-bold uppercase tracking-[0.25em] text-slate-500">Como funciona</p>
         <h2 className="mt-2 text-2xl font-black text-slate-900 md:text-3xl">Comece em menos de 2 minutos</h2>
 
