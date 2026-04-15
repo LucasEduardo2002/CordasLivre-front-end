@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const navBase = 'rounded-full px-4 py-2.5 text-sm font-semibold transition';
 
@@ -22,6 +22,11 @@ const navLinks: NavLinkItem[] = [
 
 export function MainNav() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="relative w-full sm:w-auto">
@@ -32,7 +37,10 @@ export function MainNav() {
         aria-expanded={isMobileMenuOpen}
         aria-controls="main-nav-mobile-panel"
       >
-        <span>Menu</span>
+        <span className="flex items-center gap-2">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-50 text-cyan-700">≡</span>
+          <span>Menu principal</span>
+        </span>
         <span className="text-lg leading-none text-cyan-700">{isMobileMenuOpen ? '−' : '+'}</span>
       </button>
 
@@ -44,12 +52,44 @@ export function MainNav() {
         ))}
       </nav>
 
-      {isMobileMenuOpen && (
-        <div
+      <div
+        className={`fixed inset-0 z-50 sm:hidden transition-opacity duration-300 ease-out ${
+          isMobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        <button
+          type="button"
+          className="absolute inset-0 bg-slate-950/45"
+          aria-label="Fechar menu"
+          onClick={() => setIsMobileMenuOpen(false)}
+          tabIndex={isMobileMenuOpen ? 0 : -1}
+        />
+
+        <aside
           id="main-nav-mobile-panel"
-          className="absolute right-0 top-full z-30 mt-3 w-[min(92vw,24rem)] rounded-3xl border border-cyan-100 bg-white p-3 shadow-2xl shadow-slate-200 sm:hidden"
+          role="dialog"
+          aria-modal="true"
+          className={`absolute right-0 top-0 flex h-full w-[min(88vw,20rem)] flex-col border-l border-cyan-100 bg-white p-4 shadow-2xl shadow-slate-300 transition-transform duration-300 ease-out ${
+            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         >
-          <div className="grid gap-2">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">Navegação</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">Escolha uma seção</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-lg font-bold text-slate-700 transition hover:bg-slate-200"
+              aria-label="Fechar menu"
+            >
+              ×
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-3 overflow-y-auto pr-1">
             {navLinks.map((item) => (
               <NavLink
                 key={item.to}
@@ -57,7 +97,7 @@ export function MainNav() {
                 end={item.end}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={({ isActive }) =>
-                  `${navBase} block w-full text-center ${
+                  `${navBase} block w-full rounded-2xl px-4 py-3 text-left ${
                     isActive ? 'bg-cyan-600 text-white shadow-sm shadow-cyan-200' : 'bg-cyan-50 text-slate-800 hover:bg-cyan-100 hover:text-cyan-900'
                   }`
                 }
@@ -66,8 +106,13 @@ export function MainNav() {
               </NavLink>
             ))}
           </div>
-        </div>
-      )}
+
+          <div className="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50 p-4 text-sm text-slate-700">
+            <p className="font-semibold text-slate-900">Acesso rápido</p>
+            <p className="mt-1 leading-6">Use o menu lateral para navegar entre as páginas sem perda de espaço na tela.</p>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
