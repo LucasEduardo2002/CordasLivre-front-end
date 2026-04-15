@@ -101,21 +101,6 @@ export function HomePage() {
         <p className="cl-text-balance relative z-10 mt-4 max-w-2xl text-sm leading-6 text-slate-200 sm:text-[15px] md:text-base md:leading-7">
           Plataforma pensada para quem quer decidir rápido: ranking claro, explicações objetivas, recomendação de timbre e monitoramento da vida útil.
         </p>
-
-        <div className="relative z-10 mt-6 grid gap-3 sm:grid-cols-3 md:gap-4">
-          <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
-            <p className="text-2xl font-black text-white">4</p>
-            <p className="text-xs uppercase tracking-wide text-slate-200">módulos integrados</p>
-          </div>
-          <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
-            <p className="text-2xl font-black text-white">1</p>
-            <p className="text-xs uppercase tracking-wide text-slate-200">fluxo intuitivo</p>
-          </div>
-          <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
-            <p className="text-2xl font-black text-white">100%</p>
-            <p className="text-xs uppercase tracking-wide text-slate-200">foco na decisão</p>
-          </div>
-        </div>
       </section>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2">

@@ -106,11 +106,6 @@ export function MainNav() {
               </NavLink>
             ))}
           </div>
-
-          <div className="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50 p-4 text-sm text-slate-700">
-            <p className="font-semibold text-slate-900">Acesso rápido</p>
-            <p className="mt-1 leading-6">Use o menu lateral para navegar entre as páginas sem perda de espaço na tela.</p>
-          </div>
         </aside>
       </div>
     </div>
