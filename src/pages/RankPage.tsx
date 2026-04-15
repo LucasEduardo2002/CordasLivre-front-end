@@ -36,50 +36,6 @@ interface WebSearchResponse {
   results: WebSearchItem[];
 }
 
-interface ToneAssistantResponse {
-  type: StringType;
-  instrumentLabel: string;
-  levelLabel: string;
-  styleLabel: string;
-  recommendedGauge: string;
-  recommendedMaterial: string;
-  recommendedTension: string;
-  explanation: string;
-  nextStep: string;
-  products: Array<{
-    id: number;
-    title: string;
-    price: number;
-    ratingAvg: number | null;
-    ratingCount: number;
-    permalink: string;
-    thumbnail: string;
-    rank: number;
-  }>;
-}
-
-interface MaintenanceProfileResponse {
-  id: string;
-  userEmail: string;
-  type: StringType;
-  lastChangeDate: string;
-  studyHoursPerWeek: number;
-  estimatedLifeDays: number;
-  nextAlertDate: string;
-  alertLevel: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
-  alertMessage: string | null;
-  affiliateUrl: string | null;
-}
-
-interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
-  computedAlert: {
-    code: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
-    label: string;
-    tone: 'success' | 'warning' | 'danger';
-    message: string;
-  };
-}
-
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const fetchProductsWithRetry = async (type: StringType, retries = 5, delayMs = 1800): Promise<Product[]> => {
@@ -113,21 +69,6 @@ export function RankPage() {
   const [webSearchLoading, setWebSearchLoading] = useState(false);
   const [webSearchError, setWebSearchError] = useState<string | null>(null);
   const [webSearchData, setWebSearchData] = useState<WebSearchResponse | null>(null);
-  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
-  const [wizardInstrument, setWizardInstrument] = useState('Violao Classico');
-  const [wizardLevel, setWizardLevel] = useState('Iniciante');
-  const [wizardStyle, setWizardStyle] = useState('MPB');
-  const [toneLoading, setToneLoading] = useState(false);
-  const [toneError, setToneError] = useState<string | null>(null);
-  const [toneResult, setToneResult] = useState<ToneAssistantResponse | null>(null);
-  const [maintenanceEmail, setMaintenanceEmail] = useState('');
-  const [maintenanceInstrument, setMaintenanceInstrument] = useState<StringType>('VIOLAO');
-  const [maintenanceDate, setMaintenanceDate] = useState('');
-  const [maintenanceHours, setMaintenanceHours] = useState(4);
-  const [maintenanceLoading, setMaintenanceLoading] = useState(false);
-  const [maintenanceError, setMaintenanceError] = useState<string | null>(null);
-  const [maintenanceSaved, setMaintenanceSaved] = useState<MaintenanceProfileResponse | null>(null);
-  const [maintenanceAlerts, setMaintenanceAlerts] = useState<MaintenanceAlertResponse[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -200,91 +141,6 @@ export function RankPage() {
       setWebSearchError('Não foi possível buscar ofertas na web agora.');
     } finally {
       setWebSearchLoading(false);
-    }
-  };
-
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-
-  const maintenanceToneClasses = {
-    success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
-    warning: 'border-amber-200 bg-amber-50 text-amber-900',
-    danger: 'border-red-200 bg-red-50 text-red-900',
-  } as const;
-
-  const maintenanceLabelClasses = {
-    success: 'bg-emerald-600 text-white',
-    warning: 'bg-amber-600 text-white',
-    danger: 'bg-red-600 text-white',
-  } as const;
-
-  const handleToneAssistant = async () => {
-    setToneLoading(true);
-    setToneError(null);
-    setToneResult(null);
-
-    try {
-      const response = await axios.post<ToneAssistantResponse>(`${API_BASE_URL}/strings/tone-assistant`, {
-        instrument: wizardInstrument,
-        level: wizardLevel,
-        style: wizardStyle,
-      });
-      setToneResult(response.data);
-    } catch (error) {
-      console.error('Erro no assistente de timbre:', error);
-      setToneError('Não foi possível gerar recomendação agora.');
-    } finally {
-      setToneLoading(false);
-    }
-  };
-
-  const handleRegisterMaintenance = async () => {
-    setMaintenanceLoading(true);
-    setMaintenanceError(null);
-
-    try {
-      const response = await axios.post<{ profile: MaintenanceProfileResponse }>(`${API_BASE_URL}/strings/maintenance/register`, {
-        email: maintenanceEmail,
-        instrument: maintenanceInstrument,
-        lastChangeDate: maintenanceDate,
-        studyHoursPerWeek: maintenanceHours,
-      });
-
-      setMaintenanceSaved(response.data.profile);
-    } catch (error) {
-      console.error('Erro ao registrar vida útil:', error);
-      setMaintenanceError('Não foi possível salvar seu registro de vida útil.');
-    } finally {
-      setMaintenanceLoading(false);
-    }
-  };
-
-  const handleLoadMaintenanceAlerts = async () => {
-    if (!maintenanceEmail.trim()) {
-      setMaintenanceError('Informe um e-mail para consultar alertas.');
-      return;
-    }
-
-    setMaintenanceLoading(true);
-    setMaintenanceError(null);
-
-    try {
-      const response = await axios.get<MaintenanceAlertResponse[]>(`${API_BASE_URL}/strings/maintenance/alerts`, {
-        params: {
-          email: maintenanceEmail,
-        },
-      });
-
-      setMaintenanceAlerts(response.data);
-    } catch (error) {
-      console.error('Erro ao carregar alertas:', error);
-      setMaintenanceError('Não foi possível carregar os alertas deste e-mail.');
-    } finally {
-      setMaintenanceLoading(false);
     }
   };
 

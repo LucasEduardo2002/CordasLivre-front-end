@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { stringTypeOptions, type StringType } from '../constants/instruments';
+import type { StringType } from '../constants/instruments';
 import { API_BASE_URL } from '../utils/api';
 
 interface ToneAssistantResponse {
