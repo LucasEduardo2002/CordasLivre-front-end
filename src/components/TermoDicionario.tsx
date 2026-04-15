@@ -12,6 +12,61 @@ interface TermoDados {
   shortDesc: string;
 }
 
+const LOCAL_DICTIONARY: Record<string, TermoDados> = {
+  '0.10': {
+    category: 'Calibre',
+    shortDesc: 'Conjunto leve, com toque mais macio e menor esforço para tocar.',
+  },
+  '0.11': {
+    category: 'Calibre',
+    shortDesc: 'Equilíbrio entre conforto e presença sonora, com resposta mais firme.',
+  },
+  '0.12': {
+    category: 'Calibre',
+    shortDesc: 'Mais corpo e resistência, indicado para quem quer projeção e estabilidade.',
+  },
+  '0.13': {
+    category: 'Calibre',
+    shortDesc: 'Tensão mais alta, com ataque forte e sensação mais robusta ao tocar.',
+  },
+  '0.14': {
+    category: 'Calibre',
+    shortDesc: 'Opção mais pesada, com sensação firme e maior exigência na mão.',
+  },
+  '0.15': {
+    category: 'Calibre',
+    shortDesc: 'Maior resistência, normalmente usada por quem busca pegada mais dura.',
+  },
+  '0.16': {
+    category: 'Calibre',
+    shortDesc: 'Configuração forte, com alta tensão e resposta mais rígida.',
+  },
+  'Phosphor Bronze': {
+    category: 'Liga',
+    shortDesc: 'Liga conhecida por timbre equilibrado, calor e sustentação.',
+  },
+  '80/20 Bronze': {
+    category: 'Liga',
+    shortDesc: 'Liga com brilho mais evidente e ataque mais direto.',
+  },
+  'Bronze 80/20': {
+    category: 'Liga',
+    shortDesc: 'Versão clássica de cordas com som aberto e resposta brilhante.',
+  },
+  Nylon: {
+    category: 'Material',
+    shortDesc: 'Material mais macio ao toque, com pegada confortável e suave.',
+  },
+  Aço: {
+    category: 'Material',
+    shortDesc: 'Material com mais tensão, brilho e projeção sonora.',
+  },
+  Aco: {
+    category: 'Material',
+    shortDesc: 'Material com mais tensão, brilho e projeção sonora.',
+  },
+};
+
 const DEFAULT_API_URL = 'https://cordaslivre-back-end.onrender.com';
 
 const resolveApiBaseUrl = () => {
@@ -54,9 +109,12 @@ export function TermoDicionario({ termo, children, variant = 'pill' }: TermoDici
         if (response.ok) {
           const resultado = (await response.json()) as TermoDados | null;
           setDados(resultado);
+        } else {
+          setDados(LOCAL_DICTIONARY[termo] ?? null);
         }
       } catch (error) {
         console.error('Erro ao procurar o termo no dicionário:', error);
+        setDados(LOCAL_DICTIONARY[termo] ?? null);
       } finally {
         setACarregar(false);
       }
@@ -83,7 +141,7 @@ export function TermoDicionario({ termo, children, variant = 'pill' }: TermoDici
       )}
 
       {visivel && (
-        <div className="absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-3 text-left text-sm shadow-xl">
+        <div className="absolute bottom-full left-1/2 z-50 mb-3 w-[22rem] max-w-[calc(100vw-1.5rem)] -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-4 text-left text-sm shadow-2xl">
           <div className="absolute top-full left-1/2 -mt-px -translate-x-1/2 border-4 border-transparent border-t-white" />
           <div className="absolute top-full left-1/2 -z-10 mt-px -translate-x-1/2 border-4 border-transparent border-t-slate-200" />
 
