@@ -19,6 +19,23 @@ interface Product {
   permalink: string;
 }
 
+interface WebSearchItem {
+  id: string;
+  title: string;
+  price: number | null;
+  source: string;
+  permalink: string;
+  thumbnail: string | null;
+}
+
+interface WebSearchResponse {
+  query: string;
+  cached: boolean;
+  providers: string[];
+  total: number;
+  results: WebSearchItem[];
+}
+
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const fetchProductsWithRetry = async (type: StringType, retries = 5, delayMs = 1800): Promise<Product[]> => {
@@ -47,6 +64,11 @@ export function RankPage() {
   const [loading, setLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [selectedType, setSelectedType] = useState<StringType>('VIOLAO');
+  const [isWebPanelOpen, setIsWebPanelOpen] = useState(false);
+  const [webSearchQuery, setWebSearchQuery] = useState('encordoamento violao');
+  const [webSearchLoading, setWebSearchLoading] = useState(false);
+  const [webSearchError, setWebSearchError] = useState<string | null>(null);
+  const [webSearchData, setWebSearchData] = useState<WebSearchResponse | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -62,6 +84,13 @@ export function RankPage() {
       .finally(() => setLoading(false));
   }, [selectedType]);
 
+  useEffect(() => {
+    const label = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'violao';
+    setWebSearchQuery(`encordoamento ${label.toLowerCase()}`);
+    setWebSearchData(null);
+    setWebSearchError(null);
+  }, [selectedType]);
+
   const selectedTypeLabel = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violao';
   const topProduct = products.find((product) => product.rank === 1) || products[0];
 
@@ -75,7 +104,45 @@ export function RankPage() {
   const formatRating = (rating: number | null) =>
     rating === null ? 'Sem nota' : rating.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
+  const formatWebPrice = (price: number | null) => {
+    if (price === null) {
+      return 'Preco indisponivel';
+    }
+
+    return formatPrice(price);
+  };
+
   const formatRatingCount = (count: number) => `${count.toLocaleString('pt-BR')} ${count === 1 ? 'avaliacao' : 'avaliacoes'}`;
+
+  const handleWebSearch = async () => {
+    const normalizedQuery = webSearchQuery.trim();
+
+    if (normalizedQuery.length < 3) {
+      setWebSearchError('Digite pelo menos 3 caracteres para buscar na web.');
+      return;
+    }
+
+    setWebSearchLoading(true);
+    setWebSearchError(null);
+
+    try {
+      const response = await axios.get<WebSearchResponse>(`${API_BASE_URL}/strings/web-search`, {
+        timeout: 25000,
+        params: {
+          q: normalizedQuery,
+          type: selectedType,
+          limit: 12,
+        },
+      });
+
+      setWebSearchData(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar na web:', error);
+      setWebSearchError('Nao foi possivel buscar ofertas na web agora.');
+    } finally {
+      setWebSearchLoading(false);
+    }
+  };
 
   const renderTitleWithDictionaryTerms = (title: string): ReactNode => {
     const segments = splitTextByDictionaryTerms(title);
@@ -141,6 +208,102 @@ export function RankPage() {
           Nao foi possivel carregar o ranking agora. Tente novamente em alguns instantes.
         </section>
       )}
+
+      <section className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 shadow-sm md:p-5">
+        <button
+          type="button"
+          onClick={() => setIsWebPanelOpen((current) => !current)}
+          className="flex w-full items-center justify-between rounded-xl bg-white/70 px-3 py-3 text-left transition hover:bg-white"
+          aria-expanded={isWebPanelOpen}
+          aria-controls="painel-busca-web"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Pesquisa web</p>
+            <h2 className="mt-1 text-lg font-bold text-slate-900">Buscar melhores precos na web</h2>
+          </div>
+          <span className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-700">
+            {isWebPanelOpen ? '−' : '+'}
+          </span>
+        </button>
+
+        {!isWebPanelOpen && (
+          <p className="mt-3 text-sm text-emerald-900">
+            Painel recolhido. Clique para abrir a busca de ofertas e comparar precos na web.
+          </p>
+        )}
+
+        {isWebPanelOpen && (
+          <div id="painel-busca-web" className="mt-3">
+            <div className="grid gap-2 md:grid-cols-[1fr_auto]">
+              <input
+                type="text"
+                value={webSearchQuery}
+                onChange={(event) => setWebSearchQuery(event.target.value)}
+                placeholder="Ex.: encordoamento violao 0.10"
+                className="rounded-lg border border-emerald-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500"
+              />
+              <button
+                type="button"
+                onClick={handleWebSearch}
+                disabled={webSearchLoading}
+                className={`rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition ${
+                  webSearchLoading ? 'cursor-wait bg-emerald-400' : 'bg-emerald-600 hover:bg-emerald-500'
+                }`}
+              >
+                {webSearchLoading ? 'Buscando...' : 'Buscar na web'}
+              </button>
+            </div>
+
+            {webSearchError && (
+              <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{webSearchError}</div>
+            )}
+
+            {webSearchData && (
+              <div className="mt-4">
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-emerald-800">
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">{webSearchData.total} ofertas</span>
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">Fontes: {webSearchData.providers.join(', ')}</span>
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">{webSearchData.cached ? 'Cache' : 'Tempo real'}</span>
+                </div>
+
+                {webSearchData.results.length === 0 ? (
+                  <div className="rounded-lg border border-emerald-200 bg-white p-3 text-sm text-emerald-900">
+                    Nenhuma oferta encontrada para essa busca.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {webSearchData.results.map((item) => (
+                      <article key={item.id} className="rounded-xl border border-emerald-200 bg-white p-3">
+                        <div className="flex items-start gap-3">
+                          <img
+                            src={item.thumbnail || '/branding/logo-mark.svg'}
+                            alt={item.title}
+                            className="h-16 w-16 rounded-lg bg-slate-50 p-1 object-contain"
+                            loading="lazy"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="line-clamp-2 text-sm font-semibold text-slate-900">{item.title}</p>
+                            <p className="mt-1 text-xs font-medium text-slate-600">{item.source}</p>
+                            <p className="mt-1 text-lg font-extrabold text-emerald-700">{formatWebPrice(item.price)}</p>
+                          </div>
+                        </div>
+                        <a
+                          href={item.permalink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                        >
+                          Ver oferta
+                        </a>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
       <section className="mt-6">
         {loading ? (
