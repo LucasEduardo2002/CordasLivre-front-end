@@ -88,27 +88,12 @@ export function AprendaInstrumento() {
     >
       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="bg-[radial-gradient(circle_at_top_left,_rgba(6,182,212,0.2),_transparent_36%),linear-gradient(135deg,_rgba(11,18,40,1),_rgba(31,42,82,1))] p-6 text-white md:p-8">
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-200">Conteúdo profissional</p>
+          <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-200">Guia Rápido</p>
           <h3 className="mt-3 text-2xl font-black leading-tight md:text-4xl">Aprenda sobre seu instrumento</h3>
           <p className="mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
             Antes de comprar, você pode entender o que significam os termos do anúncio sem sair da tela. Passe o mouse nos
             destaques para ver a definição do dicionário em tempo real.
           </p>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Leitura rápida</p>
-              <p className="mt-2 text-sm text-white/90">Compreende o código do produto antes da decisão.</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Experiência clara</p>
-              <p className="mt-2 text-sm text-white/90">Informação contextual sem interromper a navegação.</p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Conteúdo objetivo</p>
-              <p className="mt-2 text-sm text-white/90">Aprendizado direto, visual e realmente útil na decisão.</p>
-            </div>
-          </div>
         </div>
 
         <div className="bg-slate-50 p-6 md:p-8">
