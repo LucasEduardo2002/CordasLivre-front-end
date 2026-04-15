@@ -36,6 +36,48 @@ interface WebSearchResponse {
   results: WebSearchItem[];
 }
 
+interface ToneAssistantResponse {
+  type: StringType;
+  instrumentLabel: string;
+  levelLabel: string;
+  styleLabel: string;
+  recommendedGauge: string;
+  recommendedMaterial: string;
+  recommendedTension: string;
+  explanation: string;
+  nextStep: string;
+  products: Array<{
+    id: number;
+    title: string;
+    price: number;
+    ratingAvg: number | null;
+    ratingCount: number;
+    permalink: string;
+    thumbnail: string;
+    rank: number;
+  }>;
+}
+
+interface MaintenanceProfileResponse {
+  id: string;
+  userEmail: string;
+  type: StringType;
+  lastChangeDate: string;
+  studyHoursPerWeek: number;
+  estimatedLifeDays: number;
+  nextAlertDate: string;
+  alertLevel: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
+  alertMessage: string | null;
+  affiliateUrl: string | null;
+}
+
+interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
+  computedAlert: {
+    level: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
+    message: string;
+  };
+}
+
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 const fetchProductsWithRetry = async (type: StringType, retries = 5, delayMs = 1800): Promise<Product[]> => {
@@ -69,6 +111,21 @@ export function RankPage() {
   const [webSearchLoading, setWebSearchLoading] = useState(false);
   const [webSearchError, setWebSearchError] = useState<string | null>(null);
   const [webSearchData, setWebSearchData] = useState<WebSearchResponse | null>(null);
+  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
+  const [wizardInstrument, setWizardInstrument] = useState('Violao Classico');
+  const [wizardLevel, setWizardLevel] = useState('Iniciante');
+  const [wizardStyle, setWizardStyle] = useState('MPB');
+  const [toneLoading, setToneLoading] = useState(false);
+  const [toneError, setToneError] = useState<string | null>(null);
+  const [toneResult, setToneResult] = useState<ToneAssistantResponse | null>(null);
+  const [maintenanceEmail, setMaintenanceEmail] = useState('');
+  const [maintenanceInstrument, setMaintenanceInstrument] = useState<StringType>('VIOLAO');
+  const [maintenanceDate, setMaintenanceDate] = useState('');
+  const [maintenanceHours, setMaintenanceHours] = useState(4);
+  const [maintenanceLoading, setMaintenanceLoading] = useState(false);
+  const [maintenanceError, setMaintenanceError] = useState<string | null>(null);
+  const [maintenanceSaved, setMaintenanceSaved] = useState<MaintenanceProfileResponse | null>(null);
+  const [maintenanceAlerts, setMaintenanceAlerts] = useState<MaintenanceAlertResponse[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -141,6 +198,79 @@ export function RankPage() {
       setWebSearchError('Nao foi possivel buscar ofertas na web agora.');
     } finally {
       setWebSearchLoading(false);
+    }
+  };
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+  const handleToneAssistant = async () => {
+    setToneLoading(true);
+    setToneError(null);
+    setToneResult(null);
+
+    try {
+      const response = await axios.post<ToneAssistantResponse>(`${API_BASE_URL}/strings/tone-assistant`, {
+        instrument: wizardInstrument,
+        level: wizardLevel,
+        style: wizardStyle,
+      });
+      setToneResult(response.data);
+    } catch (error) {
+      console.error('Erro no assistente de timbre:', error);
+      setToneError('Nao foi possivel gerar recomendacao agora.');
+    } finally {
+      setToneLoading(false);
+    }
+  };
+
+  const handleRegisterMaintenance = async () => {
+    setMaintenanceLoading(true);
+    setMaintenanceError(null);
+
+    try {
+      const response = await axios.post<{ profile: MaintenanceProfileResponse }>(`${API_BASE_URL}/strings/maintenance/register`, {
+        email: maintenanceEmail,
+        instrument: maintenanceInstrument,
+        lastChangeDate: maintenanceDate,
+        studyHoursPerWeek: maintenanceHours,
+      });
+
+      setMaintenanceSaved(response.data.profile);
+    } catch (error) {
+      console.error('Erro ao registrar vida util:', error);
+      setMaintenanceError('Nao foi possivel salvar seu registro de vida util.');
+    } finally {
+      setMaintenanceLoading(false);
+    }
+  };
+
+  const handleLoadMaintenanceAlerts = async () => {
+    if (!maintenanceEmail.trim()) {
+      setMaintenanceError('Informe um e-mail para consultar alertas.');
+      return;
+    }
+
+    setMaintenanceLoading(true);
+    setMaintenanceError(null);
+
+    try {
+      const response = await axios.get<MaintenanceAlertResponse[]>(`${API_BASE_URL}/strings/maintenance/alerts`, {
+        params: {
+          email: maintenanceEmail,
+        },
+      });
+
+      setMaintenanceAlerts(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar alertas:', error);
+      setMaintenanceError('Nao foi possivel carregar os alertas deste e-mail.');
+    } finally {
+      setMaintenanceLoading(false);
     }
   };
 
@@ -303,6 +433,240 @@ export function RankPage() {
             )}
           </div>
         )}
+      </section>
+
+      <section className="mt-6 grid gap-4 lg:grid-cols-2">
+        <article className="rounded-2xl border border-indigo-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Assistente de timbre</p>
+          <h2 className="mt-1 text-xl font-bold text-slate-900">Recomendacao guiada para iniciantes</h2>
+          <p className="mt-2 text-sm text-slate-600">Responda 3 perguntas para receber uma indicacao didatica de calibre e material.</p>
+
+          <div className="mt-4 flex items-center gap-2">
+            {[1, 2, 3].map((step) => (
+              <button
+                key={step}
+                type="button"
+                onClick={() => setWizardStep(step as 1 | 2 | 3)}
+                className={`h-8 w-8 rounded-full text-xs font-bold ${wizardStep === step ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}`}
+              >
+                {step}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            {wizardStep === 1 && (
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual seu instrumento?</label>
+                <select
+                  value={wizardInstrument}
+                  onChange={(event) => setWizardInstrument(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option>Violao Classico</option>
+                  <option>Guitarra</option>
+                  <option>Contrabaixo</option>
+                  <option>Cavaquinho</option>
+                  <option>Viola Caipira</option>
+                  <option>Violino</option>
+                </select>
+              </div>
+            )}
+
+            {wizardStep === 2 && (
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual seu nivel?</label>
+                <select
+                  value={wizardLevel}
+                  onChange={(event) => setWizardLevel(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option>Iniciante</option>
+                  <option>Intermediario</option>
+                </select>
+              </div>
+            )}
+
+            {wizardStep === 3 && (
+              <div>
+                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual estilo voce quer tocar?</label>
+                <select
+                  value={wizardStyle}
+                  onChange={(event) => setWizardStyle(event.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                >
+                  <option>Rock</option>
+                  <option>MPB</option>
+                  <option>Sertanejo</option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setWizardStep((prev) => (prev > 1 ? ((prev - 1) as 1 | 2 | 3) : prev))}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+            >
+              Voltar
+            </button>
+            {wizardStep < 3 ? (
+              <button
+                type="button"
+                onClick={() => setWizardStep((prev) => (prev < 3 ? ((prev + 1) as 1 | 2 | 3) : prev))}
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+              >
+                Proximo
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleToneAssistant}
+                disabled={toneLoading}
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:cursor-wait disabled:bg-indigo-400"
+              >
+                {toneLoading ? 'Gerando...' : 'Gerar recomendacao'}
+              </button>
+            )}
+          </div>
+
+          {toneError && <p className="mt-3 text-sm text-red-700">{toneError}</p>}
+
+          {toneResult && (
+            <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+              <p className="text-sm font-semibold text-indigo-900">Calibre: {toneResult.recommendedGauge}</p>
+              <p className="text-sm font-semibold text-indigo-900">Material: {toneResult.recommendedMaterial}</p>
+              <p className="text-sm font-semibold text-indigo-900">Tensao: {toneResult.recommendedTension}</p>
+              <p className="mt-2 text-sm text-indigo-900">{toneResult.explanation}</p>
+              <p className="mt-2 text-xs text-indigo-700">{toneResult.nextStep}</p>
+
+              {toneResult.products.length > 0 && (
+                <div className="mt-3 grid gap-2">
+                  {toneResult.products.map((item) => (
+                    <a
+                      key={`${item.id}-${item.rank}`}
+                      href={item.permalink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-800 hover:bg-indigo-50"
+                    >
+                      #{item.rank} {item.title}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </article>
+
+        <article className="rounded-2xl border border-amber-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Vida util das cordas</p>
+          <h2 className="mt-1 text-xl font-bold text-slate-900">Calculadora e alertas</h2>
+          <p className="mt-2 text-sm text-slate-600">Registre sua troca e veja quando as cordas devem perder brilho.</p>
+
+          <div className="mt-4 grid gap-3">
+            <label className="text-sm font-semibold text-slate-800">
+              E-mail
+              <input
+                type="email"
+                value={maintenanceEmail}
+                onChange={(event) => setMaintenanceEmail(event.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                placeholder="seuemail@dominio.com"
+              />
+            </label>
+
+            <label className="text-sm font-semibold text-slate-800">
+              Instrumento
+              <select
+                value={maintenanceInstrument}
+                onChange={(event) => setMaintenanceInstrument(event.target.value as StringType)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              >
+                {stringTypeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="text-sm font-semibold text-slate-800">
+              Data da ultima troca
+              <input
+                type="date"
+                value={maintenanceDate}
+                onChange={(event) => setMaintenanceDate(event.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+
+            <label className="text-sm font-semibold text-slate-800">
+              Horas por semana
+              <input
+                type="number"
+                min={1}
+                max={60}
+                value={maintenanceHours}
+                onChange={(event) => setMaintenanceHours(Number(event.target.value))}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleRegisterMaintenance}
+              disabled={maintenanceLoading}
+              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-400 disabled:cursor-wait disabled:bg-amber-300"
+            >
+              {maintenanceLoading ? 'Salvando...' : 'Salvar monitoramento'}
+            </button>
+            <button
+              type="button"
+              onClick={handleLoadMaintenanceAlerts}
+              disabled={maintenanceLoading}
+              className="rounded-lg border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-50 disabled:cursor-wait"
+            >
+              Ver alertas
+            </button>
+          </div>
+
+          {maintenanceError && <p className="mt-3 text-sm text-red-700">{maintenanceError}</p>}
+
+          {maintenanceSaved && (
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              <p>Registro salvo com sucesso.</p>
+              <p>Vida util estimada: {maintenanceSaved.estimatedLifeDays} dias.</p>
+              <p>Proximo alerta: {formatDate(maintenanceSaved.nextAlertDate)}.</p>
+              {maintenanceSaved.alertMessage && <p className="mt-1">{maintenanceSaved.alertMessage}</p>}
+            </div>
+          )}
+
+          {maintenanceAlerts.length > 0 && (
+            <div className="mt-4 grid gap-2">
+              {maintenanceAlerts.map((item) => (
+                <div key={item.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800">
+                  <p className="font-semibold">{item.type} · Nivel {item.computedAlert.level}</p>
+                  <p>{item.computedAlert.message}</p>
+                  <p className="text-xs text-slate-500">Proxima troca estimada: {formatDate(item.nextAlertDate)}</p>
+                  {item.affiliateUrl && (
+                    <a
+                      href={item.affiliateUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"
+                    >
+                      Ver set recomendado
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </article>
       </section>
 
       <section className="mt-6">
