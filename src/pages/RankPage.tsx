@@ -112,7 +112,7 @@ export function RankPage() {
     return formatPrice(price);
   };
 
-  const formatRatingCount = (count: number) => `${count.toLocaleString('pt-BR')} ${count === 1 ? 'avaliacao' : 'avaliacoes'}`;
+  const formatRatingCount = (count: number) => `${count.toLocaleString('pt-BR')} ${count === 1 ? 'avaliação' : 'avaliações'}`;
 
   const handleWebSearch = async () => {
     const normalizedQuery = webSearchQuery.trim();
@@ -162,14 +162,16 @@ export function RankPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Ranking atualizado</p>
-        <h1 className="mt-2 text-3xl font-black text-slate-900 md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
-        <p className="mt-3 max-w-3xl text-sm text-slate-600 md:text-base">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-6 text-white shadow-xl md:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
+        <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Ranking atualizado</p>
+        <h1 className="relative z-10 mt-2 text-3xl font-black md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
+        <p className="relative z-10 mt-3 max-w-3xl text-sm text-cyan-50 md:text-base">
           Veja os produtos mais bem posicionados, compare preços e abra os termos técnicos no título para entender cada item com rapidez.
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="relative z-10 mt-5 flex flex-wrap gap-2">
           {stringTypeOptions.map((option) => {
             const active = option.value === selectedType;
             return (
@@ -179,8 +181,8 @@ export function RankPage() {
                 onClick={() => setSelectedType(option.value)}
                 className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                   active
-                    ? 'border-slate-900 bg-slate-900 text-white'
-                    : 'border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50'
+                    ? 'border-cyan-200 bg-cyan-500 text-white'
+                    : 'border-white/40 bg-white/15 text-white hover:border-white/70 hover:bg-white/25'
                 }`}
               >
                 {option.label}
@@ -189,13 +191,13 @@ export function RankPage() {
           })}
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="relative z-10 mt-5 flex flex-wrap gap-3">
           <a
             href={topProduct?.permalink || '#'}
             target="_blank"
             rel="noopener noreferrer"
             className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition ${
-              topProduct?.permalink ? 'bg-amber-500 hover:bg-amber-400' : 'pointer-events-none bg-slate-400'
+              topProduct?.permalink ? 'bg-amber-500 hover:bg-amber-400' : 'pointer-events-none bg-white/30'
             }`}
           >
             Comprar Top 1
@@ -209,7 +211,7 @@ export function RankPage() {
         </section>
       )}
 
-      <section className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 shadow-sm md:p-5">
+      <section className="cl-fade-up cl-delay-1 mt-6 rounded-2xl border border-cyan-200 bg-cyan-50/70 p-4 shadow-sm md:p-5">
         <button
           type="button"
           onClick={() => setIsWebPanelOpen((current) => !current)}
@@ -218,16 +220,16 @@ export function RankPage() {
           aria-controls="painel-busca-web"
         >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Pesquisa web</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-cyan-700">Pesquisa web</p>
             <h2 className="mt-1 text-lg font-bold text-slate-900">Buscar melhores preços na web</h2>
           </div>
-          <span className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-700">
+          <span className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-100 text-lg font-bold text-cyan-700">
             {isWebPanelOpen ? '−' : '+'}
           </span>
         </button>
 
         {!isWebPanelOpen && (
-          <p className="mt-3 text-sm text-emerald-900">
+          <p className="mt-3 text-sm text-cyan-900">
             Painel recolhido. Clique para abrir a busca de ofertas e comparar preços na web.
           </p>
         )}
@@ -240,14 +242,14 @@ export function RankPage() {
                 value={webSearchQuery}
                 onChange={(event) => setWebSearchQuery(event.target.value)}
                 placeholder="Ex.: encordoamento violão 0.10"
-                className="rounded-lg border border-emerald-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500"
+                className="rounded-lg border border-cyan-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-cyan-500"
               />
               <button
                 type="button"
                 onClick={handleWebSearch}
                 disabled={webSearchLoading}
                 className={`rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition ${
-                  webSearchLoading ? 'cursor-wait bg-emerald-400' : 'bg-emerald-600 hover:bg-emerald-500'
+                  webSearchLoading ? 'cursor-wait bg-cyan-400' : 'bg-cyan-600 hover:bg-cyan-500'
                 }`}
               >
                 {webSearchLoading ? 'Buscando...' : 'Buscar na web'}
@@ -260,20 +262,20 @@ export function RankPage() {
 
             {webSearchData && (
               <div className="mt-4">
-                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-emerald-800">
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">{webSearchData.total} ofertas</span>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">Fontes: {webSearchData.providers.join(', ')}</span>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1">{webSearchData.cached ? 'Cache' : 'Tempo real'}</span>
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-cyan-800">
+                  <span className="rounded-full bg-cyan-100 px-2.5 py-1">{webSearchData.total} ofertas</span>
+                  <span className="rounded-full bg-cyan-100 px-2.5 py-1">Fontes: {webSearchData.providers.join(', ')}</span>
+                  <span className="rounded-full bg-cyan-100 px-2.5 py-1">{webSearchData.cached ? 'Cache' : 'Tempo real'}</span>
                 </div>
 
                 {webSearchData.results.length === 0 ? (
-                  <div className="rounded-lg border border-emerald-200 bg-white p-3 text-sm text-emerald-900">
+                  <div className="rounded-lg border border-cyan-200 bg-white p-3 text-sm text-cyan-900">
                     Nenhuma oferta encontrada para esta busca.
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                     {webSearchData.results.map((item) => (
-                      <article key={item.id} className="rounded-xl border border-emerald-200 bg-white p-3">
+                      <article key={item.id} className="rounded-xl border border-cyan-200 bg-white p-3">
                         <div className="flex items-start gap-3">
                           <img
                             src={item.thumbnail || '/branding/logo-mark.svg'}
@@ -284,14 +286,14 @@ export function RankPage() {
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-sm font-semibold text-slate-900">{item.title}</p>
                             <p className="mt-1 text-xs font-medium text-slate-600">{item.source}</p>
-                            <p className="mt-1 text-lg font-extrabold text-emerald-700">{formatWebPrice(item.price)}</p>
+                            <p className="mt-1 text-lg font-extrabold text-cyan-700">{formatWebPrice(item.price)}</p>
                           </div>
                         </div>
                         <a
                           href={item.permalink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
+                          className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cyan-700 px-3 py-2 text-sm font-semibold text-white transition hover:bg-cyan-600"
                         >
                           Ver oferta
                         </a>
@@ -305,7 +307,7 @@ export function RankPage() {
         )}
       </section>
 
-      <section className="mt-6">
+      <section className="cl-fade-up cl-delay-2 mt-6">
         {loading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, index) => (

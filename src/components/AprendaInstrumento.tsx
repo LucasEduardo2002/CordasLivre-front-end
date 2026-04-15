@@ -51,15 +51,15 @@ const learningCards: LearningCard[] = [
 ];
 
 const toneClasses = {
-  amber: 'border-amber-200 bg-amber-50 text-amber-950',
-  indigo: 'border-indigo-200 bg-indigo-50 text-indigo-950',
-  emerald: 'border-emerald-200 bg-emerald-50 text-emerald-950',
+  amber: 'border-cyan-200 bg-cyan-50/70 text-slate-900',
+  indigo: 'border-cyan-200 bg-cyan-50/70 text-slate-900',
+  emerald: 'border-cyan-200 bg-cyan-50/70 text-slate-900',
 };
 
 const toneBadgeClasses = {
-  amber: 'bg-amber-500 text-white',
-  indigo: 'bg-indigo-600 text-white',
-  emerald: 'bg-emerald-600 text-white',
+  amber: 'bg-cyan-700 text-white',
+  indigo: 'bg-cyan-700 text-white',
+  emerald: 'bg-cyan-700 text-white',
 };
 
 const anatomyRows = [
@@ -84,11 +84,11 @@ export function AprendaInstrumento() {
   return (
     <section
       id="aprenda"
-      className="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-24px_rgba(15,23,42,0.25)]"
+      className="cl-fade-up cl-delay-1 mt-6 overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_20px_60px_-24px_rgba(15,23,42,0.25)]"
     >
       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.12),_transparent_36%),linear-gradient(135deg,_rgba(15,23,42,1),_rgba(30,41,59,1))] p-6 text-white md:p-8">
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-amber-300">Conteúdo profissional</p>
+        <div className="bg-[radial-gradient(circle_at_top_left,_rgba(6,182,212,0.2),_transparent_36%),linear-gradient(135deg,_rgba(11,18,40,1),_rgba(31,42,82,1))] p-6 text-white md:p-8">
+          <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-200">Conteúdo profissional</p>
           <h3 className="mt-3 text-2xl font-black leading-tight md:text-4xl">Aprenda sobre seu instrumento</h3>
           <p className="mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
             Antes de comprar, você pode entender o que significam os termos do anúncio sem sair da tela. Passe o mouse nos
@@ -97,28 +97,28 @@ export function AprendaInstrumento() {
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-amber-200">Leitura rápida</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Leitura rápida</p>
               <p className="mt-2 text-sm text-white/90">Compreende o código do produto antes da decisão.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-amber-200">Experiência clara</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Experiência clara</p>
               <p className="mt-2 text-sm text-white/90">Informação contextual sem interromper a navegação.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-amber-200">Conteúdo objetivo</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide text-cyan-200">Conteúdo objetivo</p>
               <p className="mt-2 text-sm text-white/90">Aprendizado direto, visual e realmente útil na decisão.</p>
             </div>
           </div>
         </div>
 
         <div className="bg-slate-50 p-6 md:p-8">
-          <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-500">Anatomia da corda</p>
+          <div className="rounded-3xl border border-cyan-100 bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-700">Anatomia da corda</p>
             <div className="mt-4 space-y-4">
               {anatomyRows.map((row) => (
                 <div key={row.label} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-slate-900 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                    <span className="rounded-full bg-cyan-700 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
                       {row.label}
                     </span>
                     <span className="text-sm font-semibold text-slate-900">{row.value}</span>
@@ -131,9 +131,9 @@ export function AprendaInstrumento() {
         </div>
       </div>
 
-      <div className="grid gap-4 border-t border-slate-200 p-6 md:grid-cols-3 md:p-8">
+      <div className="grid gap-4 border-t border-cyan-100 p-6 md:grid-cols-3 md:p-8">
         {learningCards.map((card) => (
-          <article key={card.title} className={`rounded-2xl border p-5 ${toneClasses[card.tone]}`}>
+          <article key={card.title} className={`rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${toneClasses[card.tone]}`}>
             <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-500">{card.eyebrow}</p>
             <div className="mt-3 flex items-start justify-between gap-3">
               <h4 className="text-lg font-black leading-tight">{card.title}</h4>

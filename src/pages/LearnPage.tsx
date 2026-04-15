@@ -3,10 +3,12 @@ import { AprendaInstrumento } from '../components/AprendaInstrumento';
 export function LearnPage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Guia rápido</p>
-        <h1 className="mt-2 text-3xl font-black text-slate-900 md:text-4xl">Aprenda sobre seu instrumento</h1>
-        <p className="mt-3 max-w-3xl text-sm text-slate-600 md:text-base">
+      <section className="cl-fade-up relative overflow-hidden rounded-3xl border border-cyan-300/30 bg-[linear-gradient(125deg,_rgba(11,18,40,1),_rgba(31,42,82,1),_rgba(6,78,125,1))] p-6 text-white shadow-xl md:p-8">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
+        <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Guia rápido</p>
+        <h1 className="relative z-10 mt-2 text-3xl font-black md:text-4xl">Aprenda sobre seu instrumento</h1>
+        <p className="relative z-10 mt-3 max-w-3xl text-sm text-cyan-50 md:text-base">
           Entenda os termos mais comuns de encordoamento e tome decisões de compra com mais segurança.
         </p>
       </section>

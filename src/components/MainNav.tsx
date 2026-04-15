@@ -3,11 +3,11 @@ import { NavLink } from 'react-router-dom';
 const navBase = 'rounded-full px-4 py-2 text-sm font-semibold transition';
 
 const navItem = ({ isActive }: { isActive: boolean }) =>
-  `${navBase} ${isActive ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`;
+  `${navBase} ${isActive ? 'bg-cyan-600 text-white shadow-sm shadow-cyan-200' : 'text-slate-700 hover:bg-cyan-50 hover:text-cyan-900'}`;
 
 export function MainNav() {
   return (
-    <nav className="flex flex-wrap items-center gap-2 rounded-full border border-slate-200 bg-white p-1">
+    <nav className="flex flex-wrap items-center gap-2 rounded-full border border-cyan-100 bg-white/90 p-1 backdrop-blur">
       <NavLink to="/" end className={navItem}>
         Início
       </NavLink>
