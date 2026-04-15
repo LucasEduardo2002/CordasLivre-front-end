@@ -42,9 +42,10 @@ const IconHarmony = () => (
 
 const IconComfort = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M6 10c0-2 1-3 2-4l2-2" />
-    <path d="M18 10c0-2-1-3-2-4l-2-2" />
-    <path d="M7 8v10c0 2 2 3 5 3s5-1 5-3V8" />
+    <path d="M4 10h16" />
+    <path d="M6 6v12c0 1 1 2 2 2h8c1 0 2-1 2-2V6" />
+    <path d="M9 3v3" />
+    <path d="M15 3v3" />
   </svg>
 );
 
@@ -68,10 +69,13 @@ const IconMaterial = () => (
 
 const IconTension = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="M4 6c0-1 2-2 8-2s8 1 8 2" />
-    <path d="M12 4v16" />
-    <path d="M4 6v10c0 1-2 2-8 2" />
-    <path d="M20 6v10c0 1 2 2 8 2" />
+    <path d="M4 8v8" />
+    <path d="M8 8v8" />
+    <path d="M12 8v8" />
+    <path d="M16 8v8" />
+    <path d="M20 8v8" />
+    <path d="M4 8c0-2 2-3 4-3s4 1 4 3" />
+    <path d="M12 8c0-2 2-3 4-3s4 1 4 3" />
   </svg>
 );
 
@@ -93,19 +97,21 @@ const IconMusic = () => (
 
 const IconTool = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <path d="m14 6 4 4" />
-    <path d="m5 19 7-7 2 2-7 7H5Z" />
-    <path d="M13 5a3 3 0 0 1 4 4" />
+    <path d="M3 12h18" />
+    <path d="M6 6l2-2h8l2 2" />
+    <path d="M6 18l2 2h8l2-2" />
+    <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
   </svg>
 );
 
 const IconGuitar = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={iconClass} aria-hidden="true">
-    <circle cx="12" cy="16" r="3" />
-    <path d="M12 3v10" />
-    <path d="M8 7h8" />
-    <path d="M9 11h6" />
-    <path d="M10 14h4" />
+    <circle cx="12" cy="14" r="4" />
+    <path d="M12 2v8" />
+    <path d="M9 6h6" />
+    <path d="M10 10h4" />
+    <path d="M12 18v4" />
+    <path d="M11 5h2" />
   </svg>
 );
 
