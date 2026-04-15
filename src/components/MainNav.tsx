@@ -70,7 +70,7 @@ export function MainNav() {
           id="main-nav-mobile-panel"
           role="dialog"
           aria-modal="true"
-          className={`absolute right-0 top-0 flex h-full w-[min(88vw,20rem)] flex-col border-l border-cyan-100 bg-white p-4 shadow-2xl shadow-slate-300 transition-transform duration-300 ease-out ${
+          className={`absolute right-0 top-0 flex h-dvh w-[min(88vw,20rem)] flex-col overflow-y-auto border-l border-cyan-100 bg-white p-4 pb-6 shadow-2xl shadow-slate-300 transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -89,7 +89,7 @@ export function MainNav() {
             </button>
           </div>
 
-          <div className="mt-4 grid gap-3 overflow-y-auto pr-1">
+          <div className="mt-4 grid gap-3 pr-1">
             {navLinks.map((item) => (
               <NavLink
                 key={item.to}
