@@ -28,12 +28,6 @@ interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
 interface MaintenanceRegistrationResponse {
   profile: MaintenanceProfileResponse;
   alert: MaintenanceAlertResponse['computedAlert'];
-  emailDelivery?: {
-    delivered: boolean;
-    provider: 'smtp' | 'ethereal' | 'skipped';
-    previewUrl?: string;
-    messageId?: string;
-  };
 }
 
 export function MaintenancePage() {
@@ -46,7 +40,6 @@ export function MaintenancePage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<MaintenanceProfileResponse | null>(null);
   const [savedAlert, setSavedAlert] = useState<MaintenanceAlertResponse['computedAlert'] | null>(null);
-  const [emailDelivery, setEmailDelivery] = useState<MaintenanceRegistrationResponse['emailDelivery'] | null>(null);
   const [alerts, setAlerts] = useState<MaintenanceAlertResponse[]>([]);
 
   const formatDate = (iso: string) =>
@@ -70,7 +63,6 @@ export function MaintenancePage() {
 
       setSaved(response.data.profile);
       setSavedAlert(response.data.alert);
-      setEmailDelivery(response.data.emailDelivery ?? null);
     } catch (requestError) {
       console.error('Erro ao salvar monitoramento:', requestError);
       setError('Não foi possível salvar o monitoramento agora.');
@@ -209,22 +201,6 @@ export function MaintenancePage() {
               >
                 <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-80">{savedAlert.label}</p>
                 <p className="mt-1 font-medium">{savedAlert.message}</p>
-              </div>
-            )}
-            {emailDelivery && emailDelivery.delivered && (
-              <div className="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-slate-700">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">E-mail de teste</p>
-                <p className="mt-1">Enviado via {emailDelivery.provider === 'ethereal' ? 'Ethereal' : 'SMTP real'}.</p>
-                {emailDelivery.previewUrl && (
-                  <a
-                    href={emailDelivery.previewUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-2 inline-flex rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-700"
-                  >
-                    Ver visualização do e-mail
-                  </a>
-                )}
               </div>
             )}
           </div>
