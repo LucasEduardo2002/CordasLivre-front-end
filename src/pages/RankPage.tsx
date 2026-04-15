@@ -73,7 +73,9 @@ interface MaintenanceProfileResponse {
 
 interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
   computedAlert: {
-    level: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
+    code: 'OK' | 'SOON' | 'DUE' | 'OVERDUE';
+    label: string;
+    tone: 'success' | 'warning' | 'danger';
     message: string;
   };
 }
@@ -142,13 +144,13 @@ export function RankPage() {
   }, [selectedType]);
 
   useEffect(() => {
-    const label = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'violao';
+    const label = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violão';
     setWebSearchQuery(`encordoamento ${label.toLowerCase()}`);
     setWebSearchData(null);
     setWebSearchError(null);
   }, [selectedType]);
 
-  const selectedTypeLabel = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violao';
+  const selectedTypeLabel = stringTypeOptions.find((option) => option.value === selectedType)?.label ?? 'Violão';
   const topProduct = products.find((product) => product.rank === 1) || products[0];
 
   const formatPrice = (value: number) =>
@@ -163,7 +165,7 @@ export function RankPage() {
 
   const formatWebPrice = (price: number | null) => {
     if (price === null) {
-      return 'Preco indisponivel';
+      return 'Preço indisponível';
     }
 
     return formatPrice(price);
@@ -195,7 +197,7 @@ export function RankPage() {
       setWebSearchData(response.data);
     } catch (error) {
       console.error('Erro ao buscar na web:', error);
-      setWebSearchError('Nao foi possivel buscar ofertas na web agora.');
+      setWebSearchError('Não foi possível buscar ofertas na web agora.');
     } finally {
       setWebSearchLoading(false);
     }
@@ -207,6 +209,18 @@ export function RankPage() {
       month: '2-digit',
       year: 'numeric',
     });
+
+  const maintenanceToneClasses = {
+    success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+    warning: 'border-amber-200 bg-amber-50 text-amber-900',
+    danger: 'border-red-200 bg-red-50 text-red-900',
+  } as const;
+
+  const maintenanceLabelClasses = {
+    success: 'bg-emerald-600 text-white',
+    warning: 'bg-amber-600 text-white',
+    danger: 'bg-red-600 text-white',
+  } as const;
 
   const handleToneAssistant = async () => {
     setToneLoading(true);
@@ -222,7 +236,7 @@ export function RankPage() {
       setToneResult(response.data);
     } catch (error) {
       console.error('Erro no assistente de timbre:', error);
-      setToneError('Nao foi possivel gerar recomendacao agora.');
+      setToneError('Não foi possível gerar recomendação agora.');
     } finally {
       setToneLoading(false);
     }
@@ -242,8 +256,8 @@ export function RankPage() {
 
       setMaintenanceSaved(response.data.profile);
     } catch (error) {
-      console.error('Erro ao registrar vida util:', error);
-      setMaintenanceError('Nao foi possivel salvar seu registro de vida util.');
+      console.error('Erro ao registrar vida útil:', error);
+      setMaintenanceError('Não foi possível salvar seu registro de vida útil.');
     } finally {
       setMaintenanceLoading(false);
     }
@@ -268,7 +282,7 @@ export function RankPage() {
       setMaintenanceAlerts(response.data);
     } catch (error) {
       console.error('Erro ao carregar alertas:', error);
-      setMaintenanceError('Nao foi possivel carregar os alertas deste e-mail.');
+      setMaintenanceError('Não foi possível carregar os alertas deste e-mail.');
     } finally {
       setMaintenanceLoading(false);
     }
@@ -296,7 +310,7 @@ export function RankPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Ranking atualizado</p>
         <h1 className="mt-2 text-3xl font-black text-slate-900 md:text-4xl">Top cordas para {selectedTypeLabel.toLowerCase()}</h1>
         <p className="mt-3 max-w-3xl text-sm text-slate-600 md:text-base">
-          Veja os produtos mais bem posicionados, compare preco e abra os termos tecnicos no titulo para entender cada item com rapidez.
+          Veja os produtos mais bem posicionados, compare preços e abra os termos técnicos no título para entender cada item com rapidez.
         </p>
 
         <div className="mt-5 flex flex-wrap gap-2">
@@ -335,7 +349,7 @@ export function RankPage() {
 
       {hasError && (
         <section className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-          Nao foi possivel carregar o ranking agora. Tente novamente em alguns instantes.
+          Não foi possível carregar o ranking agora. Tente novamente em alguns instantes.
         </section>
       )}
 
@@ -349,7 +363,7 @@ export function RankPage() {
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Pesquisa web</p>
-            <h2 className="mt-1 text-lg font-bold text-slate-900">Buscar melhores precos na web</h2>
+            <h2 className="mt-1 text-lg font-bold text-slate-900">Buscar melhores preços na web</h2>
           </div>
           <span className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-700">
             {isWebPanelOpen ? '−' : '+'}
@@ -358,7 +372,7 @@ export function RankPage() {
 
         {!isWebPanelOpen && (
           <p className="mt-3 text-sm text-emerald-900">
-            Painel recolhido. Clique para abrir a busca de ofertas e comparar precos na web.
+            Painel recolhido. Clique para abrir a busca de ofertas e comparar preços na web.
           </p>
         )}
 
@@ -369,7 +383,7 @@ export function RankPage() {
                 type="text"
                 value={webSearchQuery}
                 onChange={(event) => setWebSearchQuery(event.target.value)}
-                placeholder="Ex.: encordoamento violao 0.10"
+                placeholder="Ex.: encordoamento violão 0.10"
                 className="rounded-lg border border-emerald-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500"
               />
               <button
@@ -398,7 +412,7 @@ export function RankPage() {
 
                 {webSearchData.results.length === 0 ? (
                   <div className="rounded-lg border border-emerald-200 bg-white p-3 text-sm text-emerald-900">
-                    Nenhuma oferta encontrada para essa busca.
+                    Nenhuma oferta encontrada para esta busca.
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -433,240 +447,6 @@ export function RankPage() {
             )}
           </div>
         )}
-      </section>
-
-      <section className="mt-6 grid gap-4 lg:grid-cols-2">
-        <article className="rounded-2xl border border-indigo-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-indigo-700">Assistente de timbre</p>
-          <h2 className="mt-1 text-xl font-bold text-slate-900">Recomendacao guiada para iniciantes</h2>
-          <p className="mt-2 text-sm text-slate-600">Responda 3 perguntas para receber uma indicacao didatica de calibre e material.</p>
-
-          <div className="mt-4 flex items-center gap-2">
-            {[1, 2, 3].map((step) => (
-              <button
-                key={step}
-                type="button"
-                onClick={() => setWizardStep(step as 1 | 2 | 3)}
-                className={`h-8 w-8 rounded-full text-xs font-bold ${wizardStep === step ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}`}
-              >
-                {step}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-4">
-            {wizardStep === 1 && (
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual seu instrumento?</label>
-                <select
-                  value={wizardInstrument}
-                  onChange={(event) => setWizardInstrument(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                >
-                  <option>Violao Classico</option>
-                  <option>Guitarra</option>
-                  <option>Contrabaixo</option>
-                  <option>Cavaquinho</option>
-                  <option>Viola Caipira</option>
-                  <option>Violino</option>
-                </select>
-              </div>
-            )}
-
-            {wizardStep === 2 && (
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual seu nivel?</label>
-                <select
-                  value={wizardLevel}
-                  onChange={(event) => setWizardLevel(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                >
-                  <option>Iniciante</option>
-                  <option>Intermediario</option>
-                </select>
-              </div>
-            )}
-
-            {wizardStep === 3 && (
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-slate-800">Qual estilo voce quer tocar?</label>
-                <select
-                  value={wizardStyle}
-                  onChange={(event) => setWizardStyle(event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                >
-                  <option>Rock</option>
-                  <option>MPB</option>
-                  <option>Sertanejo</option>
-                </select>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-4 flex gap-2">
-            <button
-              type="button"
-              onClick={() => setWizardStep((prev) => (prev > 1 ? ((prev - 1) as 1 | 2 | 3) : prev))}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
-            >
-              Voltar
-            </button>
-            {wizardStep < 3 ? (
-              <button
-                type="button"
-                onClick={() => setWizardStep((prev) => (prev < 3 ? ((prev + 1) as 1 | 2 | 3) : prev))}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Proximo
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleToneAssistant}
-                disabled={toneLoading}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:cursor-wait disabled:bg-indigo-400"
-              >
-                {toneLoading ? 'Gerando...' : 'Gerar recomendacao'}
-              </button>
-            )}
-          </div>
-
-          {toneError && <p className="mt-3 text-sm text-red-700">{toneError}</p>}
-
-          {toneResult && (
-            <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
-              <p className="text-sm font-semibold text-indigo-900">Calibre: {toneResult.recommendedGauge}</p>
-              <p className="text-sm font-semibold text-indigo-900">Material: {toneResult.recommendedMaterial}</p>
-              <p className="text-sm font-semibold text-indigo-900">Tensao: {toneResult.recommendedTension}</p>
-              <p className="mt-2 text-sm text-indigo-900">{toneResult.explanation}</p>
-              <p className="mt-2 text-xs text-indigo-700">{toneResult.nextStep}</p>
-
-              {toneResult.products.length > 0 && (
-                <div className="mt-3 grid gap-2">
-                  {toneResult.products.map((item) => (
-                    <a
-                      key={`${item.id}-${item.rank}`}
-                      href={item.permalink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-lg border border-indigo-200 bg-white px-3 py-2 text-sm text-slate-800 hover:bg-indigo-50"
-                    >
-                      #{item.rank} {item.title}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </article>
-
-        <article className="rounded-2xl border border-amber-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Vida util das cordas</p>
-          <h2 className="mt-1 text-xl font-bold text-slate-900">Calculadora e alertas</h2>
-          <p className="mt-2 text-sm text-slate-600">Registre sua troca e veja quando as cordas devem perder brilho.</p>
-
-          <div className="mt-4 grid gap-3">
-            <label className="text-sm font-semibold text-slate-800">
-              E-mail
-              <input
-                type="email"
-                value={maintenanceEmail}
-                onChange={(event) => setMaintenanceEmail(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                placeholder="seuemail@dominio.com"
-              />
-            </label>
-
-            <label className="text-sm font-semibold text-slate-800">
-              Instrumento
-              <select
-                value={maintenanceInstrument}
-                onChange={(event) => setMaintenanceInstrument(event.target.value as StringType)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                {stringTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="text-sm font-semibold text-slate-800">
-              Data da ultima troca
-              <input
-                type="date"
-                value={maintenanceDate}
-                onChange={(event) => setMaintenanceDate(event.target.value)}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </label>
-
-            <label className="text-sm font-semibold text-slate-800">
-              Horas por semana
-              <input
-                type="number"
-                min={1}
-                max={60}
-                value={maintenanceHours}
-                onChange={(event) => setMaintenanceHours(Number(event.target.value))}
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </label>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={handleRegisterMaintenance}
-              disabled={maintenanceLoading}
-              className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-amber-400 disabled:cursor-wait disabled:bg-amber-300"
-            >
-              {maintenanceLoading ? 'Salvando...' : 'Salvar monitoramento'}
-            </button>
-            <button
-              type="button"
-              onClick={handleLoadMaintenanceAlerts}
-              disabled={maintenanceLoading}
-              className="rounded-lg border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-50 disabled:cursor-wait"
-            >
-              Ver alertas
-            </button>
-          </div>
-
-          {maintenanceError && <p className="mt-3 text-sm text-red-700">{maintenanceError}</p>}
-
-          {maintenanceSaved && (
-            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-              <p>Registro salvo com sucesso.</p>
-              <p>Vida util estimada: {maintenanceSaved.estimatedLifeDays} dias.</p>
-              <p>Proximo alerta: {formatDate(maintenanceSaved.nextAlertDate)}.</p>
-              {maintenanceSaved.alertMessage && <p className="mt-1">{maintenanceSaved.alertMessage}</p>}
-            </div>
-          )}
-
-          {maintenanceAlerts.length > 0 && (
-            <div className="mt-4 grid gap-2">
-              {maintenanceAlerts.map((item) => (
-                <div key={item.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800">
-                  <p className="font-semibold">{item.type} · Nivel {item.computedAlert.level}</p>
-                  <p>{item.computedAlert.message}</p>
-                  <p className="text-xs text-slate-500">Proxima troca estimada: {formatDate(item.nextAlertDate)}</p>
-                  {item.affiliateUrl && (
-                    <a
-                      href={item.affiliateUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700"
-                    >
-                      Ver set recomendado
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </article>
       </section>
 
       <section className="mt-6">

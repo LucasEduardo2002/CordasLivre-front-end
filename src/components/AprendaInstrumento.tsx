@@ -89,7 +89,7 @@ export function AprendaInstrumento() {
       <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.12),_transparent_36%),linear-gradient(135deg,_rgba(15,23,42,1),_rgba(30,41,59,1))] p-6 text-white md:p-8">
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-amber-300">Conteúdo profissional</p>
-          <h3 className="mt-3 text-2xl font-black leading-tight md:text-4xl">Aprenda sobre seu Instrumento</h3>
+          <h3 className="mt-3 text-2xl font-black leading-tight md:text-4xl">Aprenda sobre seu instrumento</h3>
           <p className="mt-4 max-w-2xl text-sm text-slate-200 md:text-base">
             Antes de comprar, você pode entender o que significam os termos do anúncio sem sair da tela. Passe o mouse nos
             destaques para ver a definição do dicionário em tempo real.
