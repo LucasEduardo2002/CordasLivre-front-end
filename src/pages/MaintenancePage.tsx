@@ -25,14 +25,28 @@ interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
   };
 }
 
+interface MaintenanceRegistrationResponse {
+  profile: MaintenanceProfileResponse;
+  alert: MaintenanceAlertResponse['computedAlert'];
+  emailDelivery?: {
+    delivered: boolean;
+    provider: 'smtp' | 'ethereal' | 'skipped';
+    previewUrl?: string;
+    messageId?: string;
+  };
+}
+
 export function MaintenancePage() {
   const [email, setEmail] = useState('');
   const [instrument, setInstrument] = useState<StringType>('VIOLAO');
   const [lastChangeDate, setLastChangeDate] = useState('');
   const [hoursPerWeek, setHoursPerWeek] = useState(4);
-  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingAlerts, setIsLoadingAlerts] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<MaintenanceProfileResponse | null>(null);
+  const [savedAlert, setSavedAlert] = useState<MaintenanceAlertResponse['computedAlert'] | null>(null);
+  const [emailDelivery, setEmailDelivery] = useState<MaintenanceRegistrationResponse['emailDelivery'] | null>(null);
   const [alerts, setAlerts] = useState<MaintenanceAlertResponse[]>([]);
 
   const formatDate = (iso: string) =>
@@ -43,11 +57,11 @@ export function MaintenancePage() {
     });
 
   const saveMaintenance = async () => {
-    setLoading(true);
+    setIsSaving(true);
     setError(null);
 
     try {
-      const response = await axios.post<{ profile: MaintenanceProfileResponse }>(`${API_BASE_URL}/strings/maintenance/register`, {
+      const response = await axios.post<MaintenanceRegistrationResponse>(`${API_BASE_URL}/strings/maintenance/register`, {
         email,
         instrument,
         lastChangeDate,
@@ -55,11 +69,13 @@ export function MaintenancePage() {
       });
 
       setSaved(response.data.profile);
+      setSavedAlert(response.data.alert);
+      setEmailDelivery(response.data.emailDelivery ?? null);
     } catch (requestError) {
       console.error('Erro ao salvar monitoramento:', requestError);
       setError('Não foi possível salvar o monitoramento agora.');
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
@@ -69,7 +85,7 @@ export function MaintenancePage() {
       return;
     }
 
-    setLoading(true);
+    setIsLoadingAlerts(true);
     setError(null);
 
     try {
@@ -82,7 +98,7 @@ export function MaintenancePage() {
       console.error('Erro ao carregar alertas:', requestError);
       setError('Não foi possível carregar os alertas agora.');
     } finally {
-      setLoading(false);
+      setIsLoadingAlerts(false);
     }
   };
 
@@ -159,18 +175,18 @@ export function MaintenancePage() {
           <button
             type="button"
             onClick={saveMaintenance}
-            disabled={loading}
+            disabled={isSaving}
             className="w-full rounded-xl bg-cyan-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-600 disabled:cursor-wait disabled:bg-cyan-400 sm:w-auto"
           >
-            {loading ? 'Salvando...' : 'Salvar monitoramento'}
+            {isSaving ? 'Salvando...' : 'Salvar monitoramento'}
           </button>
           <button
             type="button"
             onClick={loadAlerts}
-            disabled={loading}
+            disabled={isLoadingAlerts}
             className="w-full rounded-xl border border-cyan-300 px-4 py-2 text-sm font-semibold text-cyan-800 transition hover:bg-cyan-50 disabled:cursor-wait sm:w-auto"
           >
-            Ver alertas
+            {isLoadingAlerts ? 'Carregando...' : 'Ver alertas'}
           </button>
         </div>
 
@@ -181,7 +197,36 @@ export function MaintenancePage() {
             <p className="font-semibold">Monitoramento salvo com sucesso.</p>
             <p>Vida útil estimada: {saved.estimatedLifeDays} dias.</p>
             <p>Próximo alerta: {formatDate(saved.nextAlertDate)}.</p>
-            {saved.alertMessage && <p className="mt-1">{saved.alertMessage}</p>}
+            {savedAlert && (
+              <div
+                className={`mt-3 rounded-lg border p-3 ${
+                  savedAlert.tone === 'success'
+                    ? 'border-cyan-200 bg-cyan-50'
+                    : savedAlert.tone === 'warning'
+                      ? 'border-amber-200 bg-amber-50'
+                      : 'border-red-200 bg-red-50'
+                }`}
+              >
+                <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-80">{savedAlert.label}</p>
+                <p className="mt-1 font-medium">{savedAlert.message}</p>
+              </div>
+            )}
+            {emailDelivery && emailDelivery.delivered && (
+              <div className="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-slate-700">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">E-mail de teste</p>
+                <p className="mt-1">Enviado via {emailDelivery.provider === 'ethereal' ? 'Ethereal' : 'SMTP real'}.</p>
+                {emailDelivery.previewUrl && (
+                  <a
+                    href={emailDelivery.previewUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 inline-flex rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-700"
+                  >
+                    Ver visualização do e-mail
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         )}
 
