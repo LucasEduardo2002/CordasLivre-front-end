@@ -61,6 +61,7 @@ export function ToneAssistantPage() {
   const [instrument, setInstrument] = useState('Violão Clássico');
   const [level, setLevel] = useState('Iniciante');
   const [style, setStyle] = useState('MPB');
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ToneAssistantResponse | null>(null);
@@ -104,9 +105,9 @@ export function ToneAssistantPage() {
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-amber-300/20 blur-3xl" />
         <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Assistente de timbre</p>
-        <h1 className="cl-text-balance relative z-10 mt-2 max-w-3xl text-3xl font-black md:text-4xl">Recomendação mais assertiva para o seu som</h1>
+        <h1 className="cl-text-balance relative z-10 mt-2 max-w-3xl text-3xl font-black md:text-4xl">Descubra o melhor encordoamento para você</h1>
         <p className="cl-text-balance relative z-10 mt-3 max-w-3xl text-sm leading-6 text-cyan-50 md:text-base md:leading-7">
-          Baseado em perfil de instrumento, nível e estilo, com critérios técnicos de tensão e faixas de calibre usadas no mercado.
+          Responda 3 perguntas e receba uma recomendação clara de calibre, material e tensão.
         </p>
       </section>
 
@@ -129,7 +130,7 @@ export function ToneAssistantPage() {
         <div className="mt-4 space-y-4">
           {step === 1 && (
             <label className="block text-sm font-semibold text-slate-800">
-              Qual é o seu instrumento?
+              1) Instrumento
               <select value={instrument} onChange={(event) => setInstrument(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-cyan-500">
                 <option>Violão Clássico</option>
                 <option>Guitarra</option>
@@ -144,7 +145,7 @@ export function ToneAssistantPage() {
 
           {step === 2 && (
             <label className="block text-sm font-semibold text-slate-800">
-              Qual é o seu nível?
+              2) Nível
               <select value={level} onChange={(event) => setLevel(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-cyan-500">
                 <option>Iniciante</option>
                 <option>Intermediário</option>
@@ -155,7 +156,7 @@ export function ToneAssistantPage() {
 
           {step === 3 && (
             <label className="block text-sm font-semibold text-slate-800">
-              Qual estilo você quer tocar?
+              3) Estilo principal
               <select value={style} onChange={(event) => setStyle(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-cyan-500">
                 <option>Rock</option>
                 <option>MPB</option>
@@ -211,7 +212,7 @@ export function ToneAssistantPage() {
 
             <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-cyan-900">Compatibilidade da recomendação</p>
+                <p className="text-sm font-semibold text-cyan-900">Compatibilidade</p>
                 <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${compatibilityToneClasses[result.compatibilityTone].badge}`}>
                   {result.compatibilityLabel}
                 </span>
@@ -223,7 +224,7 @@ export function ToneAssistantPage() {
                 />
               </div>
               <p className={`mt-2 text-xs font-semibold ${compatibilityToneClasses[result.compatibilityTone].text}`}>
-                Pontuação de compatibilidade: {result.compatibilityScore}/100
+                Nota: {result.compatibilityScore}/100
               </p>
             </div>
 
@@ -243,44 +244,58 @@ export function ToneAssistantPage() {
             </div>
 
             <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
-              <p className="text-sm font-semibold text-cyan-900">Resumo da recomendação</p>
+              <p className="text-sm font-semibold text-cyan-900">Resumo rápido</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">{result.explanation}</p>
               <p className="mt-2 text-xs font-medium text-cyan-800">{result.nextStep}</p>
             </div>
 
             <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
-              <p className="text-sm font-semibold text-cyan-900">Fatores usados na decisão</p>
-              <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
-                {result.decisionFactors.map((factor) => (
-                  <li key={factor} className="flex items-start gap-2">
-                    <GaugeIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-700" />
-                    <span>{factor}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              <button
+                type="button"
+                onClick={() => setShowTechnicalDetails((value) => !value)}
+                className="inline-flex items-center rounded-lg border border-cyan-200 px-3 py-1.5 text-xs font-semibold text-cyan-800 transition hover:bg-cyan-50"
+              >
+                {showTechnicalDetails ? 'Ocultar detalhes técnicos' : 'Ver detalhes técnicos'}
+              </button>
 
-            <div className="rounded-xl border border-cyan-200 bg-white p-4 shadow-sm">
-              <p className="text-sm font-semibold text-cyan-900">Referências técnicas utilizadas</p>
-                <div className="mt-2 space-y-2">
-                {result.referenceSources.map((source) => (
-                  <a
-                    key={source.url}
-                    href={source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-lg border border-slate-200 px-3 py-2 text-sm transition hover:border-cyan-300 hover:bg-cyan-50"
-                  >
-                    <p className="font-semibold text-slate-900">{source.name}</p>
-                    <p className="text-slate-600">{source.note}</p>
-                  </a>
-                ))}
-              </div>
+              {showTechnicalDetails && (
+                <>
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold text-cyan-900">Como decidimos</p>
+                    <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
+                      {result.decisionFactors.map((factor) => (
+                        <li key={factor} className="flex items-start gap-2">
+                          <GaugeIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-cyan-700" />
+                          <span>{factor}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold text-cyan-900">Fontes</p>
+                    <div className="mt-2 space-y-2">
+                      {result.referenceSources.map((source) => (
+                        <a
+                          key={source.url}
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block rounded-lg border border-slate-200 px-3 py-2 text-sm transition hover:border-cyan-300 hover:bg-cyan-50"
+                        >
+                          <p className="font-semibold text-slate-900">{source.name}</p>
+                          <p className="text-slate-600">{source.note}</p>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {result.products.length > 0 && (
               <div>
-                <p className="mb-2 text-sm font-semibold text-cyan-900">Produtos alinhados ao perfil recomendado</p>
+                <p className="mb-2 text-sm font-semibold text-cyan-900">Sugestões de produtos</p>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                   {result.products.map((product) => (
                     <article key={product.id} className="rounded-xl border border-cyan-200 bg-white p-3">
