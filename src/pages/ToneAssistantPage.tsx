@@ -135,6 +135,7 @@ export function ToneAssistantPage() {
                 <option>Guitarra</option>
                 <option>Contrabaixo</option>
                 <option>Cavaquinho</option>
+                <option>Ukulele</option>
                 <option>Viola Caipira</option>
                 <option>Violino</option>
               </select>

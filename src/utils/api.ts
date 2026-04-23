@@ -1,4 +1,4 @@
-const DEFAULT_API_URL = 'https://cordaslivre-back-end.onrender.com';
+const DEFAULT_API_URL = 'http://localhost:3000';
 
 const resolveApiBaseUrl = () => {
   const envUrl = (import.meta.env.VITE_API_URL || '').trim();
