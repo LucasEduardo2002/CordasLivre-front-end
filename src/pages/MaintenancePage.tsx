@@ -219,6 +219,16 @@ export function MaintenancePage() {
             <p className="font-semibold">Monitoramento salvo com sucesso.</p>
             <p>Vida útil estimada: {saved.estimatedLifeDays} dias.</p>
             <p>Próximo alerta: {formatDate(saved.nextAlertDate)}.</p>
+            {saved.affiliateUrl && (
+              <a
+                href={saved.affiliateUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex rounded-lg bg-cyan-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-cyan-600"
+              >
+                Ver set recomendado agora
+              </a>
+            )}
             {savedAlert && (
               <div
                 className={`mt-3 rounded-lg border p-3 ${

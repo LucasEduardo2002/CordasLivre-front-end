@@ -133,6 +133,7 @@ export function ToneAssistantPage() {
               1) Instrumento
               <select value={instrument} onChange={(event) => setInstrument(event.target.value)} className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-cyan-500">
                 <option>Violão Clássico</option>
+                <option>Violão Aço</option>
                 <option>Guitarra</option>
                 <option>Contrabaixo</option>
                 <option>Cavaquinho</option>
