@@ -41,30 +41,6 @@ interface MaintenanceAlertResponse extends MaintenanceProfileResponse {
 interface MaintenanceRegistrationResponse {
   profile: MaintenanceProfileResponse;
   alert: MaintenanceAlertResponse['computedAlert'];
-  model?: {
-    version: string;
-    equation: string;
-    inputs: {
-      type: StringType;
-      material: StringMaterial;
-      studyHoursPerWeek: number;
-      clampedHours: number;
-    };
-    parameters: {
-      baseDays: number;
-      wearRate: number;
-      materialFactor: number;
-    };
-    references: Array<{
-      name: string;
-      url: string;
-      note: string;
-    }>;
-    configSources: {
-      profileByType: string;
-      materialFactors: string;
-    };
-  };
 }
 
 export function MaintenancePage() {
@@ -78,7 +54,6 @@ export function MaintenancePage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<MaintenanceProfileResponse | null>(null);
   const [savedAlert, setSavedAlert] = useState<MaintenanceAlertResponse['computedAlert'] | null>(null);
-  const [savedModel, setSavedModel] = useState<MaintenanceRegistrationResponse['model'] | null>(null);
   const [alerts, setAlerts] = useState<MaintenanceAlertResponse[]>([]);
 
   const formatDate = (iso: string) =>
@@ -103,7 +78,6 @@ export function MaintenancePage() {
 
       setSaved(response.data.profile);
       setSavedAlert(response.data.alert);
-      setSavedModel(response.data.model ?? null);
     } catch (requestError) {
       console.error('Erro ao salvar monitoramento:', requestError);
       setError('Não foi possível salvar o monitoramento agora.');
@@ -257,31 +231,6 @@ export function MaintenancePage() {
               >
                 <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-80">{savedAlert.label}</p>
                 <p className="mt-1 font-medium">{savedAlert.message}</p>
-              </div>
-            )}
-
-            {savedModel && (
-              <div className="mt-3 rounded-lg border border-cyan-200 bg-white p-3 text-xs text-slate-700">
-                <p className="font-semibold text-slate-900">Modelo auditável aplicado</p>
-                <p className="mt-1">Versão: {savedModel.version}</p>
-                <p>Parâmetros: baseDays={savedModel.parameters.baseDays}, wearRate={savedModel.parameters.wearRate}, materialFactor={savedModel.parameters.materialFactor}</p>
-                <p>Origem dos parâmetros: perfis={savedModel.configSources.profileByType}; materiais={savedModel.configSources.materialFactors}</p>
-                {savedModel.references.length > 0 && (
-                  <div className="mt-2 space-y-1">
-                    {savedModel.references.map((reference) => (
-                      <a
-                        key={reference.url}
-                        href={reference.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block rounded-md border border-slate-200 px-2 py-1 transition hover:border-cyan-300 hover:bg-cyan-50"
-                      >
-                        <p className="font-medium text-slate-900">{reference.name}</p>
-                        <p className="text-slate-600">{reference.note}</p>
-                      </a>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
           </div>
